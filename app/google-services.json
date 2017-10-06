@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1017777928860",
+    "firebase_url": "https://leave-management-system-332d5.firebaseio.com",
+    "project_id": "leave-management-system-332d5",
+    "storage_bucket": "leave-management-system-332d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017777928860:android:30c051ea4c6cb6b6",
+        "android_client_info": {
+          "package_name": "com.dhdigital.lms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017777928860-1o28l7ln8knca854bf6j1hod4qrsr0vi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dhdigital.lms",
+            "certificate_hash": "bd976f236182fb16e92fb809040823f4da208524"
+          }
+        },
+        {
+          "client_id": "1017777928860-9it6k5vck039m8b1lp2rr83b9mf2quj3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ03TF_9NA3FY_r5dG2FJHty8oWo8Vz6g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017777928860-9it6k5vck039m8b1lp2rr83b9mf2quj3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,14 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.gradle/
+.idea/
+app/app.iml
+basemodule/basemodule.iml
+basemodule/libs/
+basemodule/build
+build/
+gradle/
+gradlew
+gradlew.bat
+leaveManagementSystem.iml
+local.properties

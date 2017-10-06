@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Kellton Sample</string>
+
+    <!-- photo edit options dialog texts -->
+    <string name="photo_option_take_new_photo">Take a new picture</string>
+    <string name="photo_option_choose_photo">Choose a picture from phone</string>
+    <string name="photo_option_remove_photo">Remove picture</string>
+    <string name="photo_option_cancel">Cancel</string>
+    <string name="error_opening_camera">Error in opening camera to take the picture.</string>
+    <string name="error_opening_gallery">Error in opening library to select the picture.</string>
+    <string name="error_saving_profile_pic">Error in saving profile picture.</string>
+
+</resources>

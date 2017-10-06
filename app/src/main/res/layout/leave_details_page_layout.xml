@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/baselayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_toolbar"
+        layout="@layout/toolbar"></include>
+
+    <ScrollView
+        android:id="@+id/card_new_tr"
+        style="@style/card_style_view"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1">
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/leave_ref_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="6sp"
+                android:background="@drawable/card_style"
+
+                android:padding="4sp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leave Reference ID"
+                    android:padding="4sp"
+                    android:layout_marginLeft="6sp"
+                    android:gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/leave_reference_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/error_text_color"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="8sp"
+                    android:text="-"
+                    android:gravity="center_vertical"
+
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/leave_status_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="6sp"
+                android:background="@drawable/card_style"
+
+                android:padding="4sp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leave Status"
+                    android:padding="4sp"
+                    android:layout_marginLeft="6sp"
+                    android:gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/leave_status_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/error_text_color"
+                    android:textSize="14sp"
+                    android:text="-"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="8sp"
+                    android:gravity="center_vertical"
+
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2.5"
+                android:layout_marginTop="6sp"
+                android:orientation="horizontal"
+                >
+
+
+                <LinearLayout
+                    android:id="@+id/from_date_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_style"
+
+                    android:padding="4sp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="FROM"
+                        android:padding="4sp"
+                        android:layout_marginLeft="6sp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/from_date_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableTint="@color/error_text_color"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginLeft="8sp"
+                        android:gravity="center_vertical"
+                        android:text="-"
+                        />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/to_date_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_style"
+
+                    android:padding="4sp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TO"
+                        android:padding="4sp"
+                        android:layout_marginLeft="6sp"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/to_date_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableTint="@color/error_text_color"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/black"
+                        android:layout_marginLeft="8sp"
+                        android:gravity="center_vertical"
+
+                        android:text="-"
+
+
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/card_style"
+                    android:padding="4sp"
+                    >
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/no_of_days"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:text="0\nDays"
+                        android:textColor="@color/greenBulb"/>
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/leave_reason_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="6sp"
+                android:background="@drawable/card_style"
+
+                android:padding="4sp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leave Reason"
+                    android:padding="4sp"
+                    android:layout_marginLeft="6sp"
+                    android:gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/leave_reason_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/error_text_color"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="8sp"
+                    android:gravity="center_vertical"
+                    android:text="-"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/approver_details_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="6sp"
+                android:background="@drawable/card_style"
+
+                android:padding="4sp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Manager"
+                    android:padding="4sp"
+                    android:layout_marginLeft="6sp"
+                    android:gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/manager_name_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/error_text_color"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="8sp"
+                    android:gravity="center_vertical"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/approver_comments_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="6sp"
+                android:background="@drawable/card_style"
+
+                android:padding="4sp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Manager Comments"
+                    android:padding="4sp"
+                    android:layout_marginLeft="6sp"
+                    android:gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/manager_comments_txt"
+                    style="@style/edittext_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Comments"
+                    android:layout_marginLeft="8sp"
+                    android:lines="5"
+                    android:gravity="center_vertical"
+                    android:maxLines="5" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:background="@color/common_grey_4"
+                android:orientation="vertical"
+
+                android:padding="4sp">
+
+
+                <Button
+                    android:id="@+id/view_leave_bal_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="VIEW LEAVE BALANCE"
+                    android:textSize="12sp"
+                    android:background="@color/common_grey_4"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/button_save"
+        style="@style/material_design_button"
+        android:background="@drawable/button_shape"
+        android:elevation="5sp"
+        android:text="@string/photo_option_cancel" />
+
+
+</LinearLayout>

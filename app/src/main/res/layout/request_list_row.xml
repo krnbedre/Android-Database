@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:background="@drawable/card_style"
+    android:baselineAligned="false"
+    android:elevation="@dimen/elevation_height"
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <!-- LEFT TITLE PART -->
+    <RelativeLayout
+        android:id="@+id/leftpart"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight="3"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/createdonDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Jul 07,2016 at 3:55am"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tab_text_size" />
+
+    </RelativeLayout>
+    <!-- RIGHT TITLE PART -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/transaction_id_title"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="5dp"
+            android:text="Number of Days"
+            android:textAllCaps="false"
+            android:textColor="@color/secondary_text_disabled_material_light"
+            android:textSize="14sp"
+
+            />
+
+        <TextView
+            android:id="@+id/txv_tr_ref"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:text=""
+            android:textSize="12sp"
+
+            />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/material_blue_grey_800"></View>
+
+        <TextView
+            android:id="@+id/transaction_status_title"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="5dp"
+            android:text="Status"
+            android:textAllCaps="false"
+            android:textColor="@color/secondary_text_disabled_material_light"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/comments_value"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:text=""
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</LinearLayout>

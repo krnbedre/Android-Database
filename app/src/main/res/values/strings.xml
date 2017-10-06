@@ -1,3 +1,397 @@
 <resources>
-    <string name="app_name">LeaveManagementSystem</string>
+    <string name="app_name">LMS</string>
+
+
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_new_travel_request">New Travel Request</string>
+    <string name="title_activity_landing_page">Leave Management System </string>
+    <string name="title_activity_service_selection">Service Selection</string>
+    <string name="title_activity_service_summary">Summary</string>
+    <string name="title_activity_my_expense_claim">My Expense Claim</string>
+    <string name="title_activity_my_travel_request">My Travel Requests</string>
+    <string name="title_activity_new_expense_request">New Expenses Claim</string>
+    <string name="title_activity_my_draft">My Drafts</string>
+    <string name="title_activity_my_inbox">My Inbox</string>
+    <string name="title_activity_approval_history">Approval History</string>
+    <string name="title_activity_select_tr">Select Travel Requests</string>
+    <string name="title_activity_select_services">Select Services</string>
+
+    <string name="message_delete_draft_confirmation">Are you sure you want to delete this draft ?</string>
+    <string name="message_delete_tr_service_confirmation">Are you sure you want to delete this service ?</string>
+    <string name="message_delete_ec_claim_confirmation">Are you sure you want to delete this claim ?</string>
+    <string name="message_delete_doc_confirmation">Are you sure you want to delete this document ?</string>
+
+    <string name="message_remove_invalid_services_confirmation">On editing general travel detail\'s dates invalid services will get removed, Do you want to continue ?</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_search">Search</string>
+
+    <string name="lbl_login">Login</string>
+    <string name="lbl_next">Next</string>
+    <string name="lbl_add">Add</string>
+    <string name="edit_cc">Edit</string>
+    <string name="reset_cc">reset</string>
+    <string name="lbl_submit">Submit</string>
+    <string name="lbl_apply_search">APPLY &amp; SEARCH</string>
+    <string name="lbl_add_multiple_tr">Add Multiple TR</string>
+
+    <string name="new_travel_request">New Travel Request</string>
+    <string name="new_expenses_claim">New Expense Claim</string>
+    <string name="travel">Travel</string>
+    <string name="expenses">Expenses</string>
+
+    <string name="my_request">My Requests</string>
+    <string name="my_claims">My Claims</string>
+    <string name="my_draft">My Drafts</string>
+
+    <string name="check_in_date">Check-in Date</string>
+    <string name="location">Location</string>
+    <string name="hotel_category">Hotel Category</string>
+    <string name="check_out_date">Check-out Date</string>
+    <string name="no_location_found">No location found</string>
+    <string name="no_city_found">No city found</string>
+    <string name="from_and_to_location_can_not_be_same">From and To location cannot be same for \'One Way\' trip</string>
+    <string name="exchange_rate_blank">Exchange rate is blank</string>
+    <string name="pick_up_location">Pick-up Location</string>
+    <string name="drop_off_location">Drop-off Location</string>
+    <string name="pick_up_date">Pick-up Date</string>
+    <string name="drop_off_date">Drop-off Date</string>
+    <string name="brief_description_of_the_trip">Brief description of the trip</string>
+
+    <string name="no_travel_request_found">No Travel Requests Found</string>
+    <string name="no_expense_claim_found">No Expense Claims Found</string>
+    <string name="no_pending_tasks">No pending tasks</string>
+    <string name="no_unclaimed_tr">No Unclaimed Travel Requests</string>
+    <string name="no_travel_request_drafts_available">No Travel Request Drafts available</string>
+    <string name="no_expense_claim_drafts_available">No Expense Claim Drafts available</string>
+
+
+    <!--***********Login validation messages***************-->
+    <string name="login_error_enter_username">Please enter User Name</string>
+    <string name="login_error_enter_password">Please enter Password</string>
+    <string name="login_error_enter_valid_username">Please enter Valid User Name</string>
+    <string name="login_error_enter_valid_password">Please enter Valid Password</string>
+    <string name="login_error_invalid_username_or_password">Invalid User name/password combination. Please try again</string>
+
+
+    <!--***********New Travel Request validation messages***************-->
+    <string name="new_tr_error_select_start_date">Please select start date</string>
+    <string name="new_tr_error_select_end_date">Please select end date</string>
+    <string name="new_tr_error_select_cost_center">Please select cost center</string>
+    <string name="new_tr_error_select_travel_reason">Please select Travel Reason</string>
+    <string name="new_tr_error_trip_brief_desc">Please enter brief description of trip</string>
+
+    <!--***********Flight Fragment Validation messages***************-->
+    <string name="flight_error_select_start_date">Please select departure date</string>
+    <string name="flight_error_select_end_date">Please select return date</string>
+    <string name="flight_error_hour_cannot_same_for_date">On same date \'hour\' cannot be same</string>
+    <string name="flight_error_Dep_date_greater">Departure date is greater than Arrival date</string>
+
+    <string name="flight_error_select_travel_reason">* Select Travel Reason</string>
+    <string name="flight_error_trip_brief_desc">Provide brief description of trip</string>
+    <string name="flight_error_type_travel">Please select Type of Travel</string>
+    <string name="flight_error_travel_class">Please select Travel Class</string>
+    <string name="flight_error_from_location">Please enter From Location</string>
+    <string name="flight_error_to_location">Please enter To Location</string>
+    <string name="calling_card">Calling\nCard</string>
+    <string name="insurance">Insurance</string>
+    <string name="visa_required">Visa\nRequired</string>
+
+    <!--***********Hotel Fragment Validation messages***************-->
+    <string name="hotel_error_location">Please enter Location</string>
+    <string name="hotel_error_check_in_date">Please select check-in date</string>
+    <string name="hotel_error_check_out_date">Please select check-out date</string>
+    <string name="hotel_error_hotel_category">Please select hotel category</string>
+
+
+    <!--***********Car Hire Fragment Validation messages***************-->
+    <string name="car_hire_error_car_category">Please select Car Category</string>
+    <string name="car_hire_error_pick_up_location">Please enter Pick-up Location</string>
+    <string name="car_hire_error_drop_off_location">Please enter Drop-off Location</string>
+    <string name="car_hire_error_pick_up_date">Please select Pick-up Date</string>
+    <string name="car_hire_error_drop_off_date">Please select Drop-off Date</string>
+
+    <!--***********Travel Advance Fragment Validation messages***************-->
+    <string name="travel_advance_pls_select_currency">Please select Currency</string>
+    <string name="travel_advance_pls_select_date_required">Please select Date Required</string>
+    <string name="travel_advance_pls_enter_requested_amount">Please enter Requested Amount</string>
+    <string name="date_required">Date Required</string>
+    <string name="requested_amount">Requested Amount</string>
+
+    <string name="error_task_action_comment_required">Comment is required</string>
+    <string name="error_task_action_reject_reason_required">Reject reason is required</string>
+    <string name="error_task_action_delegate_to_required">Degate to is required</string>
+
+    <string name="error_exceeds_max_allowed_file_size">File size exceeds the max allowed file size, 1MB</string>
+    <string name="error_file_not_exist">It seems file not available on SD Card, please download first</string>
+
+    <!--***********Common Expense claim Fragment Validation messages***************-->
+    <string name="ec_error_type_of_expense">Please select Type of Expense</string>
+    <string name="error_provider">Please enter provider name</string>
+    <string name="no_provider_found">No provider found</string>
+    <string name="pls_enter_claim_amount">Please enter claim amount</string>
+    <string name="claim_amount_zero">Claim amount cannot be 0 or less than 0</string>
+
+    <string name="claim_amount">Claim Amount</string>
+    <string name="exchange_rate">Exchange Rate</string>
+    <string name="pls_select_currency">Please select Currency</string>
+    <string name="amount_in_local_currency">Amount In Local Currency</string>
+
+
+    <!--***********TaxiCab Expense claim Fragment Validation messages***************-->
+    <string name="pls_enter_travel_city">Please enter Travel City</string>
+    <string name="pls_select_travel_date">Please select Travel Date</string>
+
+    <!--***********Hotel Expense claim Fragment Validation messages***************-->
+    <string name="pls_select_hotel_type">Please select Hotel Type</string>
+    <string name="pls_enter_room_rent">Please enter room rent</string>
+    <string name="room_rent">Room Rent</string>
+    <string name="pls_enter_incidental_expense">Please enter incidental expense</string>
+    <string name="incidental_expense">Incidental Expense</string>
+    <string name="pls_enter_food_expense">Please enter food expense</string>
+    <string name="food_expense">Food Expense</string>
+
+    <!--***********PerDiem Expense claim Fragment Validation messages***************-->
+    <string name="pls_enter_location">Please enter Location</string>
+    <string name="pls_enter_no_of_days">Please enter no of days</string>
+    <string name="pls_select_from_date">Please select from date</string>
+    <string name="pls_select_to_date">Please select to date</string>
+
+    <!--***********Mileage Expense claim Fragment Validation messages***************-->
+    <string name="pls_select_vehicle_type">Please select Vehicle Type</string>
+    <string name="pls_select_trip_date">Please select Trip Date</string>
+    <string name="pls_enter_distance_in_km">Please enter Distance</string>
+    <string name="pls_select_expense_date">Please select Expense Date</string>
+    <string name="mileage_error_from_location">Please enter From Location</string>
+    <string name="mileage_error_to_location">Please enter To Location</string>
+    <string name="pls_enter_expense_city">Please enter Expense City</string>
+
+
+    <!--***********Own Arrangement Expense claim Fragment Validation messages***************-->
+    <string name="ec_error_select_start_date">Please select start date</string>
+    <string name="ec_error_select_end_date">Please select end date</string>
+
+    <string name="tr_date_should_in_range">Date should be in range of General Travel Details\' date</string>
+
+    <!--***********service add successfull messages***************-->
+    <string name="tr_service_add_success_flight">Flight service added successfully</string>
+    <string name="tr_service_add_success_train">Train service added successfully</string>
+    <string name="tr_service_add_success_bus">Bus service added successfully</string>
+    <string name="tr_service_add_success_car_hire">Car Hire service added successfully</string>
+    <string name="tr_service_add_success_hotel">Hotel service added successfully</string>
+    <string name="tr_service_add_success_travel_advance">Travel Advance service added successfully</string>
+    <string name="ec_claim_add_success_flight">Flight claim added successfully</string>
+    <string name="ec_claim_add_success_train">Train claim added successfully</string>
+    <string name="ec_claim_add_success_bus">Bus claim added successfully</string>
+    <string name="ec_claim_add_success_car_hire">Car Hire claim added successfully</string>
+    <string name="ec_claim_add_success_taxi_cab">Taxi Cab claim added successfully</string>
+    <string name="ec_claim_add_success_hotel">Hotel claim added successfully</string>
+    <string name="ec_claim_add_success_per_diem">Per Diem claim added successfully</string>
+    <string name="ec_claim_add_success_mileage">Mileage claim added successfully</string>
+    <string name="ec_claim_add_success_own_arrangement">Own Arrangement claim added successfully</string>
+    <string name="ec_claim_add_success_toll">Toll claim added successfully</string>
+    <string name="ec_claim_add_success_food">Food claim added successfully</string>
+    <string name="ec_claim_add_success_business">Business claim added successfully</string>
+    <string name="ec_claim_add_success_parking">Parking claim added successfully</string>
+
+
+    <string-array name="trip_type">
+        <item>One Way</item>
+        <item>Round Trip</item>
+    </string-array>
+    <string-array name="trip_type_train_bus">
+        <item>One Way</item>
+        <item>Round Trip</item>
+    </string-array>
+
+    <string-array name="claim_trip_type">
+        <item>ONE_WAY</item>
+        <item>ROUND_TRIP</item>
+    </string-array>
+
+    <!--***********Search Travel Reqeuest***************-->
+    <string name="search_tr_hint_refrence_no">Reference No</string>
+    <string name="search_tr_hint_raised_after">Raised After</string>
+    <string name="search_tr_hint_raised_before">Raised Before</string>
+
+    <!--***********Search Personal Tasks***************-->
+    <string name="search_pers_tsk_hint_refrence_no">Reference No</string>
+    <string name="search_pers_tsk_hint_raised_after">Raised After</string>
+    <string name="search_pers_tsk_hint_raised_before">Raised Before</string>
+    <string name="search_pers_tsk_hint_requestor_name">Requestor Id</string>
+
+
+    <string name="withdraw_request">WITHDRAW REQUEST</string>
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
+
+    <string-array name="type_of_expense">
+        <item>Domestic</item>
+        <item>International</item>
+    </string-array>
+
+    <string-array name="type_of_travel">
+        <item>Domestic</item>
+        <item>International</item>
+    </string-array>
+    <string-array name="travel_class_type">
+        <item>Economic</item>
+        <item>Business</item>
+    </string-array>
+    <string-array name="car_category">
+        <item>Sedan</item>
+        <item>HatchBack</item>
+    </string-array>
+    <string-array name="vehicle_type">
+        <item>Two Wheeler</item>
+        <item>Four Wheeler</item>
+    </string-array>
+    <string-array name="hotel_type">
+        <item>Hotel</item>
+        <item>Guest House</item>
+    </string-array>
+
+    <string name="db_name">DarkHorshDB.db</string>
+
+    <string-array name="landing_page_items">
+        <item>Travel</item>
+        <item>New Travel Request</item>
+        <item>My Requests</item>
+        <item>My Drafts</item>
+        <item>Expenses</item>
+        <item>New Expense Claim</item>
+        <item>My Claims</item>
+        <item>My Drafts</item>
+
+    </string-array>
+
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+    </array>
+
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+    
+    <string name="travel_reason">Travel Reason</string>
+    <string name="travel_type">Type of Travel</string>
+    <string name="travel_class">Travel Class</string>
+    <string name="currency">Currency</string>
+    <string name="cost_centre">Cost Centre</string>
+    <string name="from_location">From Location</string>
+    <string name="to_location">To Location</string>
+    <string name="flight_travel_class">Flight Travel Class</string>
+    <string name="TrainTravelClass">Train Travel Class</string>
+    <string name="BusTravelClass">Bus Travel Class</string>
+    <string name="CarCategory">Car Category</string>
+    <string name="city">Select City</string>
+     <string name="FlightProvider">Flight Providers</string>
+     <string name="TrainProvider">Train Providers</string>
+     <string name="BusProvider">Bus Providers</string>
+     <string name="HotelProvider">Hotel Providers</string>
+    <string name="CarProvider">Car Providers</string>
+    <string name="ExpenseType">Expense Type</string>
+    <string name="Provider">Provider</string>
+    <string name="HotelType">Hotel Type</string>
+    <string name="VehicleType">Vehicle Type</string>
+    <string name="policyStatus">Policy Status</string>
+
+
+
+    <string name="leaveType">Leave Type</string>
+    <string name="leaveReason">Leave Reason</string>
+    <string name="leaveEntitlement">Leave Entitlement</string>
+    <string-array name="travExpense">
+        <item>Travel</item>
+        <item>Expense</item>
+    </string-array>
+
+    <string-array name="travel_services">
+        <item>Flight</item>
+        <item>Train</item>
+        <item>Bus</item>
+        <item>CarHire</item>
+        <item>Hotel</item>
+        <item>TravelAdvance</item>
+    </string-array>
+
+    <string-array name="expense_services">
+        <item>Flight</item>
+        <item>Train</item>
+        <item>Bus</item>
+        <item>TaxiCab</item>
+        <item>CarHire</item>
+        <item>Hotel</item>
+        <item>PerDiem</item>
+        <item>Mileage</item>
+        <item>OwnArrangement</item>
+        <item>Toll</item>
+        <item>food</item>
+        <item>Business</item>
+        <item>Parking</item>
+    </string-array>
+    
+    <string name="detailed_view">Get Detailed View</string>
+    <string name="summary_view">Get Summarized View</string>
+    <string name="travel_type_tab_header">Travel Type</string>
+    <string name="travel_date_tab_header">Travel Date</string>
+    <string name="city_class_tab_header">City Class</string>
+    <string name="trav_advanc_tab_header">Travel Advance</string>
+    <string name="exp_flight">Flight</string>
+    <string name="exp_train">Train</string>
+    <string name="exp_bus">Bus</string>
+    <string name="exp_taxi">TaxiCab</string>
+    <string name="exp_carHire">CarHire</string>
+    <string name="exp_hotel">Hotel</string>
+    <string name="exp_perDiem">PerDiem</string>
+    <string name="exp_mileage">Mileage</string>
+    <string name="exp_ownArr">OwnArrangement</string>
+    <string name="exp_toll">Toll</string>
+    <string name="exp_food">food</string>
+    <string name="exp_busin">Business</string>
+    <string name="exp_park">Parking</string>
+    <string name="all_services_used">All services in this travel request are already used.</string>
+    <string name="change_password">Change Password</string>
+    <string name="error_msg_pwd_not_match">Entered passwords doesnot match.</string>
+    <string name="error_msg_pwd_incorrect">Current Password is incorrect.</string>
+    <string name="error_password_same">Current password and New Password are same.</string>
+    <string name="succes_pwd_changed">Password changed successfully</string>
+    <string name="current_pwd">Current Password</string>
+    <string name="new_pwd">New Password</string>
+    <string name="confirm_pwd">Confirm New Password</string>
+
+    <string name="screen_trans_UI_element_1">element1</string>
+    <string name="screen_trans_UI_element_2">element2</string>
+    <string name="screen_trans_UI_element_3">element3</string>
+    <string name="screen_trans_UI_element_4">element4</string>
+    <string name="screen_trans_UI_element_5">element5</string>
+    <string name="out_of_office"> Is Out of Office </string>
+    <string name="out_of_office_assignee"> Approver </string>
+    <string name="save_details">Save</string>
+    <string name="managers">Managers</string>
+    <string name="percentage">Percentage</string>
+    <string name="cc_share">Cost Centre Share</string>
+
+    <string name="cc_share_above_range">Cost Centre Share exceeds 100%</string>
+    <string name="cc_share_below_range">Cost Centre Share is below 100%</string>
+    <string name="location_error_city_types">City conflicts with your Travel Type</string>
+
+    <string name="trav_type_business_trip">Business Travel</string>
+    <string name="trav_type_business_trip_PJP">Business Travel PJP</string>
+    
+
 </resources>

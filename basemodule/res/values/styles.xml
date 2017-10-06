@@ -1,0 +1,51 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+    </style>
+
+    <!-- dialog theme -->
+    <style name="Theme_Dialog_40">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent_40</item>
+    </style>
+
+    <style name="style_photo_options_dialog_btn">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/photo_options_button_text_size</item>
+        <item name="android:textColor">@color/common_grey_3</item>
+        <item name="android:padding">@dimen/photo_options_button_padding</item>
+        <item name="android:background">@drawable/photo_option_dialog_button_bg</item>
+        <item name="android:drawable">@drawable/photo_option_dialog_button_bg</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="style_dialog_btn_cancel">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/abc_background_cache_hint_selector_material_dark
+        </item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/abc_background_cache_hint_selector_material_dark
+        </item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+
+    </style>
+
+</resources>

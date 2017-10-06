@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:background="@drawable/card_style"
+    android:elevation="4sp"
+    android:padding="2dp">
+
+
+    <LinearLayout
+        android:id="@+id/status_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:layout_marginTop="3sp"
+        android:layout_marginLeft="4sp"
+        android:layout_marginRight="4sp"
+        android:background="@color/common_grey_3"
+        android:padding="2dp"
+
+        android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/leave_type_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="14sp"
+                android:text="PRIVILAGE LEAVE"
+                android:padding="2sp"
+                android:layout_weight="1"
+                android:background="@color/common_grey_3"
+                android:gravity="center"/>
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/common_grey_3"
+                android:id="@+id/total_leaves_label"
+                android:textColor="@color/greenBulb"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="14sp"
+                android:text="1 DAY"
+                android:padding="2sp"
+                android:gravity="center"
+                ></TextView>
+
+        <LinearLayout
+            android:id="@+id/status_text_holder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/error_text_color">
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textSize="14sp"
+                android:text="13141"
+                android:padding="2sp"
+                android:gravity="center"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6sp"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/from_date_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="FROM"
+
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/to_date_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="TO"
+
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/from_date_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/text_color_primary"
+            android:text="18 Sep,2017"
+            android:textStyle="bold"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/to_date_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/text_color_primary"
+            android:text="20 Sep,2017"
+            android:textStyle="bold"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="4sp"
+            android:layout_marginRight="4sp"
+            android:layout_marginTop="6sp"
+            android:background="@color/common_grey_3"></View>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="4sp"
+        android:padding="5sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginBottom="5sp">
+        <TextView
+            android:id="@+id/leave_reason_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="LEAVE REASON"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/leave_reason_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="Not well"
+
+           />
+    </LinearLayout>
+
+</LinearLayout>
+
+

@@ -1,11 +1,119 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->]
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionModeBackground">@color/colorPrimaryDark</item>
+
+    </style>
+
+    <style name="ErrorText" parent="@android:style/TextAppearance" >
+        <item name="android:theme">@style/AppTheme</item>
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+        <item name="android:textColorHint">@android:color/holo_red_dark</item>
+        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="colorAccent">@android:color/holo_red_dark</item>
+    </style>
+
+    <style name="FloatingLabel_mini" parent="@android:style/TextAppearance" >
+        <item name="android:theme">@style/AppTheme</item>
+        <item name="android:textColor">@color/common_grey_2</item>
+        <item name="android:textColorHint">@color/common_grey_2</item>
+        <item name="android:textSize">8dp</item>
+        <item name="colorAccent">@android:color/black</item>
+    </style>
+
+    <style name="main_button_common" parent="textview_common">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:background">@color/button_bg_default</item>
+        <item name="android:minHeight">@dimen/main_button_min_height</item>
+    </style>
+
+    <style name="textview_common">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+    </style>
+
+    <style name="FloatingLabel" parent="@android:style/TextAppearance" >
+        <item name="android:theme">@style/AppTheme</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:layout_marginTop">@dimen/ten_dp</item>
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name = "android:padding">6dp</item>
+
+
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="card_style_view" parent="AppTheme">
+        <item name ="android:layout_marginRight">@dimen/fab_margin</item>
+        <item name = "android:layout_marginLeft">@dimen/fab_margin</item>
+        <item name = "android:layout_marginTop">@dimen/fab_margin</item>
+        <item name = "android:layout_marginBottom">0dp</item>
+        <item name = "android:padding">@dimen/ten_dp</item>
+        <item name = "android:background">@drawable/card_style</item>
+    </style>
+
+    <style name="floating_edittext" parent="Base.Theme.AppCompat">
+        <item name="android:textSize">@dimen/font_text_size_secondary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="android:minHeight">45dp</item>
+        <item name = "android:focusable">false</item>
+        <item name="android:selectable">false</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name = "android:inputType"> textMultiLine|textNoSuggestions</item>
+        <item name = "android:focusableInTouchMode">false</item>
+        <item name="android:ems">10</item>
+    </style>
+
+    <style name="edittext_common">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+    </style>
+
+    <style name="edittext_description" parent="edittext_common">
+        <item name="android:background">@drawable/edit_description</item>
+        <item name="android:maxLength">500</item>
+        <item name="android:gravity">left|start</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/font_text_size_secondary</item>
+        <item name="android:minHeight">35dp</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name = "android:inputType"> textMultiLine|textNoSuggestions</item>
+    </style>
+
+
+    <style name="material_design_button" parent ="AppTheme">
+
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:layout_marginRight">@dimen/fab_margin</item>
+        <item name="android:layout_marginLeft">@dimen/fab_margin</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/fab_margin</item>
+        <item name = "android:layout_width">match_parent</item>
+        <item name = "android:layout_height">@dimen/strip_min_height</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="textColorAlertDialogListItem">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textAppearanceButton">@style/floating_edittext</item>
+        <!-- <item name="android:textColorPrimary">@color/colorPrimaryDark</item>-->
     </style>
 
 </resources>
