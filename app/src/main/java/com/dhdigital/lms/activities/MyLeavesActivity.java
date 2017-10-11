@@ -3,6 +3,7 @@ package com.dhdigital.lms.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -11,17 +12,24 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.adapters.MyLeavesAdapter;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Leave;
 import com.dhdigital.lms.modal.LeaveModal;
 import com.dhdigital.lms.modal.MyleavesResponse;
+import com.dhdigital.lms.modal.TaskActionRequest;
+import com.dhdigital.lms.modal.TaskRejectRequest;
 import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
+import com.dhdigital.lms.util.PreferenceUtil;
+import com.dhdigital.lms.widgets.TaskActionDialogBuilder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import com.kelltontech.volley.ext.GsonObjectRequest;
@@ -50,6 +58,8 @@ public class MyLeavesActivity extends BaseActivity {
     private MyLeavesAdapter mLeavesAdapter;
     private List<LeaveModal> mLeavesList = new ArrayList<LeaveModal>();
     private TextView emptyView;
+
+
 
 
     @Override
@@ -180,4 +190,8 @@ public class MyLeavesActivity extends BaseActivity {
             }
         }, AppConstants.REQUEST_TIMEOUT_AVG);
     }
+
+
+
+
 }

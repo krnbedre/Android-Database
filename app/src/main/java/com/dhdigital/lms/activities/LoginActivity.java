@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -66,8 +67,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         initWidgets();
         registerGCMServices();
-        if(isUserLoggedIn()){
-            executeLoginFromCookie();
+        switchNavigation();
+
+    }
+
+    private void switchNavigation() {
+
+        String loggedInStatus = getIntent().getStringExtra("NAVIGATION");
+        if (null != loggedInStatus) {
+            switch (loggedInStatus) {
+                case "LOGGED_IN":
+                    executeLoginFromCookie();
+                    break;
+                case "LOGGED_OUT":
+                    break;
+            }
         }
     }
 
@@ -75,6 +89,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * Initialize widgets items and timings
      */
     private void initWidgets(){
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login_page);
         mEditTextPassword = ((EditText) findViewById(R.id.editText_password));
         mEditTextUsername = ((EditText) findViewById(R.id.editText_username));
@@ -88,6 +103,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mButtonLogin.setOnClickListener(this);
         mEditTextUsername.setOnFocusChangeListener(this);
         mEditTextPassword.setOnFocusChangeListener(this);
+        mContainer = (LinearLayout) findViewById(R.id.container);
 
         mEditTextPassword.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -130,8 +146,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         AppUtil.showSnackBar(findViewById(R.id.change_pwd_button), getString(R.string.login_error_invalid_username_or_password), Color.parseColor("#A52A2A"));
                         mEditTextPassword.getText().clear();
                         mEditTextUsername.getText().clear();
+                        mContainer.setVisibility(View.VISIBLE);
+
                     } else {
                         AppUtil.showSnackBar(findViewById(R.id.change_pwd_button), serviceResponse.toString(), Color.parseColor("#A52A2A"));
+                        mContainer.setVisibility(View.VISIBLE);
+
                     }
                 }
                 break;
@@ -294,6 +314,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         Log.d(TAG, "@UMESH executeLoginAPI...");
         Type userType = new TypeToken<Users>() {
         }.getType();
+
+        mContainer.setVisibility(View.GONE);
 
         RequestManager.addRequest(new GsonObjectRequest<Users>(APIUrls.LOGIN_URL, PreferenceUtil.getCookie(this), null, userType, new VolleyErrorListener(LoginActivity.this, LoginActivity.this, NetworkEvents.VALIDATE_USER)) {
 

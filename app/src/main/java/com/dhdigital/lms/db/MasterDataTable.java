@@ -38,6 +38,8 @@ public class MasterDataTable {
     private final static String LEAVE_REASON_TABLE = "leave_reason";
     private final static String TEAM_TABLE = "team";
     private final static String HOLIDAY_TABLE = "holidays";
+    private final static String REJECT_REASON_TABLE = "reject_reason";
+
 
     //public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY, m_id INTEGER, code TEXT, name TEXT, type TEXT)";
     public static final String CREATE_LEAVE_ENTITLEMENT_TABLE = "CREATE TABLE " + LEAVE_ENTITLEMENT_TABLE + " (m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT , count INTEGER, leave_type_id INTEGER , startDate INTEGER , endDate INTEGER)";
@@ -45,6 +47,8 @@ public class MasterDataTable {
     public static final String CREATE_LEAVE_REASON = "CREATE TABLE " + LEAVE_REASON_TABLE + "(m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT )";
     public static final String CREATE_TEAM_TABLE = "CREATE TABLE " + TEAM_TABLE + "(m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT )";
     public static final String CREATE_HOLIDAY_TABLE = "CREATE TABLE " + HOLIDAY_TABLE + " (m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT, holiday_date INTEGER )";
+    public static final String CREATE_REJECT_TABLE = "CREATE TABLE " + REJECT_REASON_TABLE + "(m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT )";
+
 
 
 
@@ -155,6 +159,17 @@ public class MasterDataTable {
         genericDB.insert(TEAM_TABLE, cv);
     }
 
+    public void insertRowToRejectreason(MasterData _data, MasterData.TYPE type) {
+        ContentValues cv = new ContentValues();
+        cv.put("m_id", _data.getId());
+        cv.put("code", _data.getCode());
+        cv.put("name", _data.getName());
+        cv.put("type", type.toString());
+        genericDB.insert(REJECT_REASON_TABLE, cv);
+    }
+
+
+
     public void insertTeamData(List<MasterData> dataList, MasterData.TYPE type) {
         int delStatus = genericDB.delete(TEAM_TABLE,"type=?", new String[]{type.toString()});
         for (MasterData data : dataList) {
@@ -163,6 +178,14 @@ public class MasterDataTable {
         }
     }
 
+
+    public void insertRejectReason(List<MasterData> dataList, MasterData.TYPE type) {
+        int delStatus = genericDB.delete(CREATE_REJECT_TABLE,"type=?", new String[]{type.toString()});
+        for (MasterData data : dataList) {
+            Log.d("LOG","insert API data : "+data +" type : "+type);
+            insertRowToRejectreason(data, type);
+        }
+    }
 
     public void insert(Holiday _data, MasterData.TYPE type) {
         ContentValues cv = new ContentValues();

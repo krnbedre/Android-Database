@@ -20,20 +20,27 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.adapters.CustomExpandableListAdapter;
 import com.dhdigital.lms.adapters.ExpandableListDataPump;
 import com.dhdigital.lms.db.MasterDataTable;
+import com.dhdigital.lms.fragments.PieChartFragment;
+import com.dhdigital.lms.glide.HeaderLoader;
 import com.dhdigital.lms.modal.CityMasterData;
+import com.dhdigital.lms.modal.Files;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Holiday;
 import com.dhdigital.lms.modal.LeaveEntitlement;
 import com.dhdigital.lms.modal.LeaveType;
 import com.dhdigital.lms.modal.MasterData;
+import com.dhdigital.lms.modal.MonthWiseLeave;
 import com.dhdigital.lms.modal.ProviderMasterData;
 import com.dhdigital.lms.modal.TravelReason;
 import com.dhdigital.lms.net.APIUrls;
@@ -43,6 +50,7 @@ import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AnimUtil;
 import com.dhdigital.lms.util.AppConstants;
 import com.dhdigital.lms.util.AppUtil;
+import com.dhdigital.lms.util.CircleTransform;
 import com.dhdigital.lms.util.PreferenceUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -72,6 +80,8 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         masterDataTypeMap.put(NetworkEvents.GET_MASTER_DATA_LEAVE_REASON, MasterData.TYPE.LeaveReason);
         masterDataTypeMap.put(NetworkEvents.GET_MASTER_DATA_TEAM, MasterData.TYPE.Team);
         masterDataTypeMap.put(NetworkEvents.GET_MASTER_DATA_HOLIDAY, MasterData.TYPE.Holiday);
+        masterDataTypeMap.put(NetworkEvents.GET_MASTER_DATA_REJECT_REASON, MasterData.TYPE.rejectReason);
+
 
     }
 
@@ -90,6 +100,8 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
     private ImageView mUserIcon;
     private Context mContext;
     private int numberOfResMasterDataReq = 0;
+    private FrameLayout mChartContainer;
+    private ArrayList<MonthWiseLeave> monthWiseLeaveList = new ArrayList<>();
 
 
     public static int getThemeAccentColor (final Context context) {
@@ -112,6 +124,8 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         overridePendingTransition(R.anim.do_not_move_anime,R.anim.do_not_move_anime);
         mContext = getApplicationContext();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.baselayout);
+        mChartContainer = (FrameLayout) findViewById(R.id.charts_container);
+
 
         ViewTreeObserver viewTreeObserver = mDrawerLayout.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
@@ -127,18 +141,54 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         buildToolBar();
         loadWidgets();
         buildDrawerItems();
-
         getThemeAccentColor(this);
-
         //if (MasterDataTable.getInstance(mContext).getRefreshStatus() == 0)
-            refreshMasterData();
+        refreshMasterData();
 
+    }
+
+
+    private void loadWidgets(){
+
+        ImageView imageView = (ImageView) findViewById(R.id.userDispIcon);
+
+        Files fileUpload = GlobalData.gLoggedInUser.getEmployee().getFileUpload();
+        if (null != fileUpload) {
+
+            String URL = APIUrls.FILE_DOWNLOAD + "?fileName=" + fileUpload.getFileName() + "&filePath=" + fileUpload.getPathURI();
+            Log.d("IMAGE", "URL: " + URL);
+            //AppUtil.loadThumbNailImage(context,URL ,holder.userIcon);
+
+
+            Glide.with(this)
+                    .load(HeaderLoader.getUrlWithHeaders(URL, this))
+                    .asBitmap()
+                    .transform(new CircleTransform(this))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.5f)
+                    .placeholder(R.drawable.user_icon_disp)
+                    .into(imageView);
+
+
+        }
 
 
     }
 
-    private void loadWidgets(){
 
+
+    private void loadChart() {
+
+        if (null != mChartContainer) {
+
+            PieChartFragment fragment = new PieChartFragment();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("MONTHWISE_LEAVES",monthWiseLeaveList);
+            fragment.setArguments(bundle);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.charts_container, fragment).commit();
+        }
     }
 
 
@@ -209,10 +259,12 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                         startActivity(newLeaveReq);
                         break;
                     case AppConstants.MY_LEAVES:
-                        Intent myLeavesAct = new Intent(mContext,MyLeavesActivity.class);
+                        Intent myLeavesAct = new Intent(mContext,MyLeavesTabActivity.class);
                         startActivity(myLeavesAct);
                         break;
                     case AppConstants.PERSONAL_TASK:
+                        Intent myTasks = new Intent(mContext,ApproverTasksActivity.class);
+                        startActivity(myTasks);
                         break;
                     case AppConstants.LOG_OUT:
                         onLogoutBtnClicked();
@@ -339,7 +391,21 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                     numberOfResMasterDataReq++;
                 }
                 break;
+            case NetworkEvents.GET_MASTER_DATA_REJECT_REASON:
+                removeProgressDialog();
+                if (status && serviceResponse instanceof List<?>) {
+                    MasterDataTable.getInstance(mContext).insertRejectReason((List<MasterData>) serviceResponse, MasterData.TYPE.Team);
+                    numberOfResMasterDataReq++;
+                }
+                break;
 
+            case NetworkEvents.LEAVE_DASHBOARD:
+                removeProgressDialog();
+                if (status && serviceResponse instanceof List<?>) {
+                    monthWiseLeaveList = (ArrayList<MonthWiseLeave>) serviceResponse;
+                    loadChart();
+                }
+                break;
             default:
                 removeProgressDialog();
 
@@ -381,6 +447,7 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         super.onResume();
         Log.d(AppConstants.APP_TAG,"-onResume-"+getLocalClassName());
 
+        requestDashBoardData(null,null);
         //showProgressDialog("Setting up...");
     }
 
@@ -426,6 +493,8 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                 else if (pair.getKey().equals(NetworkEvents.GET_MASTER_DATA_HOLIDAY)) {
 
                     getHolidayMasterData(pair.getValue().toString(), pair.getKey());
+                } else if (pair.getKey().equals(NetworkEvents.GET_MASTER_DATA_REJECT_REASON)) {
+                    getRejectReason(pair.getValue().toString(), pair.getKey());
                 }
             }
        //}
@@ -516,6 +585,26 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    private void getRejectReason(String name,final  int event) {
+        Type listType = new TypeToken<ArrayList<MasterData>>() {
+        }.getType();
+        showProgressDialog("Setting up...");
+
+
+        RequestManager.addRequest(new GsonObjectRequest<List>(
+                APIUrls.MASTER_DATA_URL + name,
+                HeaderManager.prepareMasterDataHeaders(LandingPageActivity.this),
+                null,
+                listType,
+                new VolleyErrorListener(LandingPageActivity.this, LandingPageActivity.this, event)
+        ) {
+            @Override
+            public void deliverResponse(List response, Map<String, String> responseHeaders) {
+                updateUi(true, event, response);
+            }
+        }, AppConstants.REQUEST_TIMEOUT_AVG);
+    }
+
   /* private void executeGetProjectMasterData(String name,final  int event) {
         showProgressDialog("Setting up...");
         RequestManager.addRequest(new GsonObjectRequest<List>(
@@ -578,19 +667,34 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
 
 
 
-    public void requestDashBoardData() {
+    public void requestDashBoardData(String leaveTypeId,String userId) {
 
+        String URL = APIUrls.USER_DASHBOARD;
+        if (leaveTypeId == null) {
+         if (userId == null) {
+         }else {
+             URL = URL + "?userId="+userId;
+         }
+        } else {
+            URL = URL + "?leaveTypeId="+leaveTypeId;
+            if (userId == null) {
+            }else {
+                URL = URL + "&userId="+userId;
+            }
+        }
+        //String URL = APIUrls.USER_DASHBOARD+"?leaveTypeId="+leaveTypeId+"&userId="+userId;
 
-        String URL = APIUrls.SUBMIT_LEAVE_REQ_URL;
-        Type type = new TypeToken<Object>() {
+        Type type = new TypeToken<ArrayList>() {
         }.getType();
 
 
         Log.d("URL", URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<Object>(APIUrls.SUBMIT_LEAVE_REQ_URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.SUBMIT_LEAVE_REQUEST)) {
+        RequestManager.addRequest(new GsonObjectRequest<List<MonthWiseLeave>>(URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.LEAVE_DASHBOARD)) {
             @Override
-            public void deliverResponse(Object response, Map<String, String> responseHeaders) {
+            public void deliverResponse(List<MonthWiseLeave> response, Map<String, String> responseHeaders) {
+
+                updateUi(true,NetworkEvents.LEAVE_DASHBOARD,response);
 
             }
         }, AppConstants.REQUEST_TIMEOUT_AVG);

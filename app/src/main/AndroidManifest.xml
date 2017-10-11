@@ -33,18 +33,35 @@
         <meta-data
             android:name="DB_VERSION"
             android:value="1" />
-        <activity android:name=".activities.LoginActivity" >
+        <activity android:name=".activities.LoginActivity" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".activities.LandingPageActivity" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
+
+            </activity>
+        <activity android:name=".activities.NewLeaveRequestActivity" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" >
+
+            </activity>
+        <activity android:name=".activities.MyLeavesActivity" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.LeaveDetailsActivity" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.SplashScreenActivity"
+            android:clearTaskOnLaunch="true" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
-        </activity>
-        <activity android:name=".activities.LandingPageActivity" />
-        <activity android:name=".activities.NewLeaveRequestActivity" >
+            </activity>
+        <activity android:name=".activities.MyLeavesTabActivity" android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait">
 
             </activity>
-        <activity android:name=".activities.MyLeavesActivity" />
-        <activity android:name=".activities.LeaveDetailsActivity" />
+        <activity android:name=".activities.ApproverTasksActivity" />
     </application>
 
 </manifest>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:background="@drawable/card_style"
+    android:elevation="4sp"
+    android:padding="2dp">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="5">
+
+
+    <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:padding="8sp">
+
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/user_icon_disp" />
+
+            <TextView
+                android:id="@+id/requestor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="2sp"
+                android:text="User Name"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:textColor="@color/text_color_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="3">
+
+        <LinearLayout
+            android:id="@+id/status_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4sp"
+            android:layout_marginRight="4sp"
+            android:layout_marginTop="3sp"
+            android:layout_weight="1"
+            android:background="@color/common_grey_3"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            android:weightSum="2">
+
+
+            <TextView
+                android:id="@+id/leave_type_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/common_grey_3"
+                android:gravity="center"
+                android:padding="2sp"
+                android:text="PRIVILAGE LEAVE"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_primary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+
+                android:id="@+id/total_leaves_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/common_grey_3"
+                android:gravity="center"
+                android:padding="2sp"
+                android:text="1 DAY"
+                android:textAllCaps="true"
+                android:textColor="@color/greenBulb"
+                android:textSize="14sp"
+                android:textStyle="bold"></TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3sp"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/from_date_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="FROM"
+
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/to_date_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="TO"
+
+            android:gravity="center"/>
+    </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/from_date_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/text_color_primary"
+            android:text="18 Sep,2017"
+            android:textStyle="bold"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/to_date_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/text_color_primary"
+            android:text="20 Sep,2017"
+            android:textStyle="bold"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="4sp"
+        android:layout_marginRight="4sp"
+        android:layout_marginTop="3sp"
+        android:background="@color/common_grey_3"></View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="4sp"
+        android:padding="5sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginBottom="5sp">
+        <TextView
+            android:id="@+id/leave_reason_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="LEAVE REASON"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/leave_reason_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color_primary"
+            android:text="Not well"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:orientation="horizontal"
+        android:padding="10sp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/approve_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableRight="@drawable/approve_leave_icon"
+            android:layout_weight="1"
+            android:drawablePadding="4sp"
+            android:layout_marginRight="6sp"
+            android:paddingEnd="50sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+        <Button
+            android:layout_marginLeft="6sp"
+            android:id="@+id/reject_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawablePadding="4sp"
+            android:drawableStart="@drawable/leave_reject_icon"
+            android:layout_weight="1"
+            android:paddingStart="50sp"
+            android:text="REJECT"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+
+

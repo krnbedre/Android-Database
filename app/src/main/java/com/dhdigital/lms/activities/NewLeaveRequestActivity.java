@@ -52,7 +52,9 @@ import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
 import com.dhdigital.lms.util.AppUtil;
+import com.dhdigital.lms.util.PreferenceUtil;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
@@ -69,6 +71,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 
 import com.kelltontech.volley.ext.GsonObjectRequest;
@@ -119,6 +122,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
     private Calendar currentCalendar = Calendar.getInstance();
     private Calendar startDateCalendar = currentCalendar;
+    private Calendar beginDateCalendar = currentCalendar;
     private Calendar endDateCalendar = currentCalendar;
 
     @Override
@@ -244,7 +248,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                             // Do something after 5s = 5000ms
                             finish();
                         }
-                    }, 3000);
+                    }, 1000);
 
                 } else {
                     AppUtil.showSnackBar(findViewById(R.id.button_save), "Failed to Apply Leave,Please try again", Color.parseColor("#A52A2A"));
@@ -264,8 +268,14 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                     }
                 }
                 break;
+            case NetworkEvents.CALCULATE_NO_DAYS:
+                if (status && serviceResponse instanceof Integer) {
+                    int noOfDays = (int) serviceResponse;
+                    updateAppliedLeaveDays(noOfDays);
+                }
         }
     }
+
 
     @Override
     public void onEvent(int eventId, Object eventData) {
@@ -338,16 +348,6 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
 
 
-    public String getFormattedCurrency(Double sum) {
-        if (sum != null) {
-            DecimalFormat df = new DecimalFormat("###.##");
-            return df.format(sum);
-        } else {
-            return "0.00";
-        }
-    }
-
-
     public void showStartDateCalendar() {
 
 
@@ -362,9 +362,10 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                     public void onDateSet(DatePickerDialog view, int selectedYear, int selectedMonth, int selectedDay) {
                         Toast.makeText(mContext,"Selected Date: "+selectedDay+"/"+selectedMonth+1+"/"+selectedYear,Toast.LENGTH_SHORT).show();
                         Calendar selectedCal = Calendar.getInstance();
-                        selectedCal.set(selectedYear,selectedMonth,selectedDay);
+                        selectedCal.set(selectedYear,selectedMonth,selectedDay,00,00,00);
                         mSelectedStartDate = selectedCal.getTimeInMillis();
                         startDateCalendar = selectedCal;
+                        beginDateCalendar = selectedCal;
                         mFromDateContainer.setBackground(getResources().getDrawable(R.drawable.card_style,null));
                         mFromDateText.setText(DateTimeUtils.getFormattedDate(mSelectedStartDate, DateTimeUtils.Format.DD_Mmmm_YYYY));
                     }
@@ -477,12 +478,14 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
                         Toast.makeText(mContext,"Selected Date: "+selectedDay+"/"+selectedMonth+1+"/"+selectedYear,Toast.LENGTH_SHORT).show();
                         Calendar selectedCal = Calendar.getInstance();
-                        selectedCal.set(selectedYear,selectedMonth,selectedDay);
+                        selectedCal.set(selectedYear,selectedMonth,selectedDay,00,00,00);
                         mSelectedEndDate = selectedCal.getTimeInMillis();
+
                         endDateCalendar = selectedCal;
                         mToDateContainer.setBackground(getResources().getDrawable(R.drawable.card_style,null));
                         mToDateText.setText(DateTimeUtils.getFormattedDate(mSelectedEndDate, DateTimeUtils.Format.DD_Mmmm_YYYY));
-                        calculateNoOfDays();
+                        //calculateNoOfDays();
+                        getAppliedLeaveDays(mSelectedStartDate,mSelectedEndDate);
                     }
                 },
                 now.get(Calendar.YEAR),
@@ -499,11 +502,22 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
         dpd.setMinDate(minDateCal);
         if (mSelectedStartDate != 0) {
-            Calendar minDate = Calendar.getInstance();
-            minDate.setTimeInMillis(mSelectedStartDate);
-            dpd.setMinDate(minDate);
+            minDateCal.setTimeInMillis(mSelectedStartDate);
+            dpd.setMinDate(minDateCal);
+            if (minDateCal.after(maxDateCal)) {
+                Log.d("LOG","True");
+            }
         }
-        dpd.setMaxDate(maxDateCal);
+
+        if (minDateCal.after(maxDateCal)) {
+            Log.d("LOG","True");
+            dpd.setMaxDate(minDateCal);
+        } else {
+            dpd.setMaxDate(maxDateCal);
+        }
+
+
+        //
         disableWeekendsinCalendar(dpd,minDateCal);
         disableHolidaysinCalendar(dpd);
         //if(dpd != null) dpd.setOnDateSetListener();
@@ -518,16 +532,70 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
     private void calculateNoOfDays() {
 
         mAppliedLeavesDaysContainer.setVisibility(View.VISIBLE);
-        Date dt1 = startDateCalendar.getTime();
-        Date dt2 = endDateCalendar.getTime();
-        int diffInDays = (int) ((dt2.getTime() - dt1.getTime()) / (1000 * 60 * 60 * 24));
-        Toast.makeText(mContext,"Days : "+diffInDays,Toast.LENGTH_SHORT).show();
-        if (dt1.equals(dt2)) {
-            mTotalDaystext.setText("1");
-        } else {
-            mTotalDaystext.setText(String.valueOf(diffInDays+1) + " DAYS");
+
+        Calendar startingDate = beginDateCalendar;
+
+        List<String> holidaysList = new ArrayList<>();
+        List<String> leaveAppliedDays = new ArrayList<>();
+
+        Calendar holidayMaster = Calendar.getInstance();
+
+
+        for (int i=0 ;i < listHolidayList.size() ;i++){
+
+            Calendar holiday = Calendar.getInstance();
+            holiday.setTimeInMillis(listHolidayList.get(i).getDate());
+            holidaysList.add(DateTimeUtils.getFormattedDate(holiday, DateTimeUtils.Format.DD_MM_YYYY));
+            Log.d("TAG","Holiday Dates :"+DateTimeUtils.getFormattedDate(holiday, DateTimeUtils.Format.DD_MM_YYYY));
+
         }
+
+        Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startDateCalendar, DateTimeUtils.Format.DD_MM_YYYY));
+
+        Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+        Log.d("TAG","End Dates :"+DateTimeUtils.getFormattedDate(endDateCalendar, DateTimeUtils.Format.DD_MM_YYYY));
+
+
+        while(startingDate.get(Calendar.DATE) <= endDateCalendar.get(Calendar.DATE)) {
+
+            Calendar holiday = Calendar.getInstance();
+            holiday.setTimeInMillis(startingDate.getTimeInMillis());
+            if (!(holiday.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || holiday.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY )) {
+
+                for (int i = 0; i < listHolidayList.size(); i++) {
+                    Calendar holidayDate = Calendar.getInstance();
+                    holidayDate.setTimeInMillis(listHolidayList.get(i).getDate());
+                    String date1 = DateTimeUtils.getFormattedDate(holidayDate, DateTimeUtils.Format.DD_MM_YYYY);
+                    String date2 = DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY);
+
+                    if (date1.equalsIgnoreCase(date2)) {
+
+                        Log.d("HOLIDAY", date1);
+                        Log.d("COMP HOLIDAY", date2);
+                        Log.d("FILTERED", "Removing Holiday :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+
+                    } else {
+                        leaveAppliedDays.add(DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+                        Log.d("FILTERED", "Dates :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+
+                    }
+                    //  Log.d("TAG", "Dates :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+                }
+            }
+            startingDate.add(Calendar.DATE,1);
+
+        }
+        if (leaveAppliedDays.size() == 1) {
+            mTotalDaystext.setText("1 DAY");
+        } else {
+            mTotalDaystext.setText(leaveAppliedDays.size()+" DAYS");
+        }
+
+        Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startDateCalendar, DateTimeUtils.Format.DD_MM_YYYY));
+
+
     }
+
 
     public void showAlertDialog(int type, boolean searchBox) {
 
@@ -683,25 +751,28 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         int reasonId = mSelectedLeaveReason.getId();
         String leaveType = mSelectedLeaveType.getLeaveType();
 
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
         Map<String,Object> postPayload = new HashMap<>();
         postPayload.put("userId",userid);
         postPayload.put("startDate",mSelectedStartDate);
         postPayload.put("endDate",mSelectedEndDate);
         postPayload.put("leaveReason",reasonId);
         postPayload.put("leaveType",leaveType);
+        postPayload.put("comments",mReasonDescriptionText.getText().toString());
 
-        String payload = new Gson().toJson(postPayload);
+        String payload = gson.toJson(postPayload);
 
+        String URL = APIUrls.SUBMIT_LEAVE_REQ_URL;
 
-        String URL = APIUrls.SUBMIT_LEAVE_REQ_URL+"?userId="+userid+"&startDate="+mSelectedStartDate+"&endDate="+mSelectedEndDate
-                +"&leaveReason="+reasonId+"&leaveType="+leaveType;
         Log.d("URL",URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<Leave>(URL,null,type,new VolleyErrorListener(this,this,NetworkEvents.SUBMIT_LEAVE_REQUEST)) {
+        RequestManager.addRequest(new GsonObjectRequest<Leave>(URL,HeaderManager.prepareMasterDataHeaders(this),payload,type,new VolleyErrorListener(this,this,NetworkEvents.SUBMIT_LEAVE_REQUEST)) {
 
             @Override
             public void deliverResponse(Leave response, Map<String, String> responseHeaders) {
 
+                PreferenceUtil.saveCookies(NewLeaveRequestActivity.this, responseHeaders);
                 updateUi(true,NetworkEvents.SUBMIT_LEAVE_REQUEST,response);
             }
 
@@ -726,7 +797,42 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         },AppConstants.REQUEST_TIMEOUT_AVG);
     }
 
+    public void getAppliedLeaveDays(long startDate,long endDate) {
 
+        Type type = new TypeToken<Integer>() {
+        }.getType();
+
+        Log.d("TAG","START DATE : "+startDate);
+        Log.d("TAG","END DATE :"+endDate);
+
+        Log.d("TAG","START DATE WITH TIME: "+startDate*1000);
+        Log.d("TAG","END DATE WITH TIME:"+endDate*1000);
+
+
+        RequestManager.addRequest(new GsonObjectRequest<Integer>(APIUrls.CALCULATE_LEAVE_DAYS+"?startDate="+startDate+"&endDate="+endDate,null,type,new VolleyErrorListener(this,this,NetworkEvents.CALCULATE_NO_DAYS)) {
+
+            @Override
+            public void deliverResponse(Integer response, Map<String, String> responseHeaders) {
+
+                updateUi(true,NetworkEvents.CALCULATE_NO_DAYS,response);
+            }
+
+        },AppConstants.REQUEST_TIMEOUT_AVG);
+    }
+
+
+    private void updateAppliedLeaveDays(int noOfDays) {
+
+        mAppliedLeavesDaysContainer.setVisibility(View.VISIBLE);
+        if (noOfDays == 1) {
+            mTotalDaystext.setText(String.valueOf(noOfDays) + " DAY");
+        } else if (noOfDays == 0) {
+            mTotalDaystext.setText(String.valueOf(noOfDays) + " DAYS");
+        } else {
+            mTotalDaystext.setText(String.valueOf(noOfDays) + " DAYS");
+        }
+
+    }
 
 
     private boolean validateForm() {
@@ -789,8 +895,8 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
             }
         }
         else  {
-            mReasonDescriptionText.setBackground(getResources().getDrawable(R.drawable.card_style_error, null));
-            return false;
+            mReasonDescriptionText.setBackground(getResources().getDrawable(R.drawable.card_style, null));
+            return true;
         }
     }
 

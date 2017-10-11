@@ -21,6 +21,7 @@ public class Employee {
     private Employee manager;
     private Employee offshoreManager;
     private Request userPreference;
+    private Files fileUpload;
     private String[] employeeTravelPreferences;
 
     public Long getId() {
@@ -173,5 +174,13 @@ public class Employee {
 
     public void setLocation(CityMasterData location) {
         this.location = location;
+    }
+
+    public Files getFileUpload() {
+        return fileUpload;
+    }
+
+    public void setFileUpload(Files fileUpload) {
+        this.fileUpload = fileUpload;
     }
 }

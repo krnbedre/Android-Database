@@ -1,7 +1,10 @@
 package com.dhdigital.lms.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +19,8 @@ import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
+import com.dhdigital.lms.util.AppUtil;
+import com.google.gson.internal.ObjectConstructor;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.volley.ext.GsonObjectRequest;
 import com.kelltontech.volley.ext.RequestManager;
@@ -83,15 +88,14 @@ public class LeaveDetailsActivity extends BaseActivity {
 
             LeaveModal leaveModal = GlobalData.gLeaveModal;
             mLeaveRefId.setText(null != leaveModal.getId() ? leaveModal.getId() : "-");
-            mLeaveStatus.setText(null != leaveModal.getLeave().getStatus() ? leaveModal.getLeave().getStatus().getName() : "-");
+            mLeaveStatus.setText(null != leaveModal.getStatus() ? leaveModal.getStatus().getName() : "-");
             mFromDateText.setText(leaveModal.getStartDate() != 0 ? DateTimeUtils.getFormattedDate(leaveModal.getStartDate(), DateTimeUtils.Format.DD_Mmm_YYYY)  : "-");
             mToDateText.setText(leaveModal.getStartDate() != 0 ? DateTimeUtils.getFormattedDate(leaveModal.getStartDate(), DateTimeUtils.Format.DD_Mmm_YYYY)  : "-");
             mTotalDaystext.setText(""+leaveModal.getCount()+"\nDAYS");
-            mLeaveReasontext.setText(null != leaveModal.getLeave().getLeaveReason() ? leaveModal.getLeave().getLeaveReason().getName() : "-");
-            mManagerText.setText(null != leaveModal.getLeave().getApprover() ? leaveModal.getLeave().getApprover().getCompleteName() : "-");
+            mLeaveReasontext.setText(null != leaveModal.getLeaveReason() ? leaveModal.getLeaveReason().getName() : "-");
+            mManagerText.setText(null != leaveModal.getApprover() ? leaveModal.getApprover().getCompleteName() : "-");
 
-            Leave leave = leaveModal.getLeave();
-            switch(leave.getStatus().getName().toUpperCase()) {
+            switch(leaveModal.getStatus().getName().toUpperCase()) {
 
                 case "APPROVED":
                     mCancelButton.setVisibility(View.GONE);
@@ -121,13 +125,15 @@ public class LeaveDetailsActivity extends BaseActivity {
 
     private void triggerCancelLeave() {
 
-        Type type = new TypeToken<Boolean>() {
+        Type type = new TypeToken<Object>() {
         }.getType();
 
-        RequestManager.addRequest(new GsonObjectRequest<Boolean>(APIUrls.CANCEL_LEAVE+"?leaveId="+GlobalData.gLeaveModal.getLeave().getId(),null,type,new VolleyErrorListener(this,this, NetworkEvents.CANCEL_LEAVE_REQUEST)) {
+        String URL = APIUrls.CANCEL_LEAVE+"?leaveId="+GlobalData.gLeaveModal.getId();
+        Log.d("TAG",URL);
+        RequestManager.addRequest(new GsonObjectRequest<Object>(URL,null,type,new VolleyErrorListener(this,this, NetworkEvents.CANCEL_LEAVE_REQUEST)) {
 
             @Override
-            public void deliverResponse(Boolean response, Map<String, String> responseHeaders) {
+            public void deliverResponse(Object response, Map<String, String> responseHeaders) {
 
                 updateUi(true,NetworkEvents.CANCEL_LEAVE_REQUEST,response);
             }
@@ -139,6 +145,19 @@ public class LeaveDetailsActivity extends BaseActivity {
     @Override
     public void updateUi(boolean status, int actionID, Object serviceResponse) {
 
+        switch (actionID) {
+            case NetworkEvents.CANCEL_LEAVE_REQUEST:
+                AppUtil.showSnackBar(findViewById(R.id.button_save), "Leave Cancelled Successfully", Color.parseColor("#259259"));
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Do something after 5s = 5000ms
+                        finish();
+                    }
+                }, 1000);
+                break;
+        }
     }
 
     @Override

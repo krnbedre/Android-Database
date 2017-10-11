@@ -30,6 +30,10 @@
             android:padding="@dimen/ten_dp"
             android:scrollbarStyle="insideOverlay">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/charts_container"></FrameLayout>
 
 
         </LinearLayout>

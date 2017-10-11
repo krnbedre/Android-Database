@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <Spinner
+        android:id="@+id/spinner_reject_reason"
+        style="@style/myspinner_common"
+        android:layout_marginTop="8dp"
+        android:prompt="@string/rejectReason"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/error_reject_reason"
+        style="@style/textview_error"
+        android:text="@string/error_task_action_reject_reason_required" />
+
+    <EditText
+        android:id="@+id/editText_comment"
+        style="@style/edittext_description"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Comments"
+        android:lines="5"
+        android:maxLines="5" />
+
+    <TextView
+        android:id="@+id/error_comment"
+        style="@style/textview_error"
+        android:text="@string/error_task_action_comment_required" />
+
+
+
+</LinearLayout>

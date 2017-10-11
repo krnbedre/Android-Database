@@ -392,6 +392,9 @@
 
     <string name="trav_type_business_trip">Business Travel</string>
     <string name="trav_type_business_trip_PJP">Business Travel PJP</string>
-    
+
+
+    <string name="rejectReason">Reject Reason</string>
+    <string name="loading">Loading...</string>
 
 </resources>

@@ -116,4 +116,17 @@
         <!-- <item name="android:textColorPrimary">@color/colorPrimaryDark</item>-->
     </style>
 
+    <style name="myspinner_common">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/strip_min_height</item>
+    </style>
+
+
+    <style name="textview_error">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/error_text_color</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

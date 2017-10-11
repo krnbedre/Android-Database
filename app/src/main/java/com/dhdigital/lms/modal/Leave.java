@@ -62,6 +62,7 @@ public class Leave  {
     MasterData leaveReason;
     MasterData status;
 
+
     public long getFromDate() {
         return fromDate;
     }

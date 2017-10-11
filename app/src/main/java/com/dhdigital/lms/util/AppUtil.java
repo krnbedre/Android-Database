@@ -31,12 +31,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.activities.LoginActivity;
+import com.dhdigital.lms.glide.HeaderLoader;
 import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.DeviceInfoUtils;
 import com.dhdigital.lms.net.HeaderManager;
@@ -438,6 +442,16 @@ public class AppUtil {
     }
 
 
+
+    public static void loadThumbNailImage(Context context,String url,ImageView image){
+        Glide.with(context)
+                .load(HeaderLoader.getUrlWithHeaders(url, context))
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.5f)
+                .placeholder(R.drawable.user_icon_disp)
+                .into(image);
+    }
 
 
 }
