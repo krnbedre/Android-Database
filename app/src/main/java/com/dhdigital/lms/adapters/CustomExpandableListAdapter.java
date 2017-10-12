@@ -5,7 +5,6 @@ package com.dhdigital.lms.adapters;
  */
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,23 +13,19 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-
 import com.dhdigital.lms.R;
-import com.dhdigital.lms.net.APIUrls;
-import com.dhdigital.lms.net.HeaderManager;
-import com.dhdigital.lms.net.NetworkEvents;
-import com.dhdigital.lms.net.VolleyErrorListener;
 
-
-
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
+    public static final int NEW_LEAVE_REQUEST = 0;
+    public static final int MY_LEAVES = 1;
+    public static final int PERSONAL_TASK = 2;
+    public static final int CALENDAR = 3;
+    public static final int LOG_OUT = 4;
     private Context context;
     private List<String> expandableListTitle;
     private HashMap<String, List<String>> expandableListDetail;
@@ -168,48 +163,49 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.listTitle);
         //updateCountStatus();
         switch (listPosition) {
-            case 0:
+            case NEW_LEAVE_REQUEST:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.apply_leave_icon), null, null, null);
                 } else {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.apply_leave_icon), null, null, null);
                 }
+
                 //setDraBackground(context.getDrawable(R.drawable.title_icon_flight));
                 break;
-            case 1:
+            case MY_LEAVES:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.my_tasks_icon), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.my_tasks_icon), null, null, null);
+                }
+
+                //  listTitleImageView.setBackground(context.getDrawable(R.drawable.title_icon_expense));
+                break;
+            case PERSONAL_TASK:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.option_indicator), null, null, null);
                 } else {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.option_indicator), null, null, null);
                 }
-
-                //  listTitleImageView.setBackground(context.getDrawable(R.drawable.title_icon_expense));
+                //listTitleImageView.setBackground(context.getDrawable(R.drawable.title_icon_my_inbox));
                 break;
-            case 2:
+            case CALENDAR:
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.calender_menu_icon), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.calender_menu_icon), null, null, null);
+                }
+                break;
+            case LOG_OUT:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
                 } else {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
                 }
-                //listTitleImageView.setBackground(context.getDrawable(R.drawable.title_icon_my_inbox));
-                break;
-            case 3:
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.option_indicator), null, null, null);
-                } else {
-                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.option_indicator), null, null, null);
-                }
-                break;
-            case 4:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.option_indicator), null, null, null);
-                } else {
-                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.option_indicator), null, null, null);
-                }
                 break;
         }
-        listTitleTextView.setTypeface(null, Typeface.BOLD);
+        //listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
         return convertView;
     }

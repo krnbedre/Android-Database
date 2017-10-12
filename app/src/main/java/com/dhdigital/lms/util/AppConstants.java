@@ -119,6 +119,8 @@ public interface AppConstants {
     public static final String USER_NAME = "Employee User name";
     public static final String COST_CENTRE_SIZE = "no of cost centres";
     public static final String MODULE = "module";
+    public static final String CALENDAR = "Holiday List";
+
 
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String TRAVEL_DESK_ROLE = "TRAVEL_DESK";

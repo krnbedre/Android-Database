@@ -1,17 +1,11 @@
 package com.dhdigital.lms.activities;
 
 import android.app.AlertDialog;
-
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-
-
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -26,17 +20,13 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.adapters.CustomAlertAdapter;
 import com.dhdigital.lms.db.MasterDataTable;
@@ -56,10 +46,14 @@ import com.dhdigital.lms.util.PreferenceUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
+import com.kelltontech.volley.ext.GsonObjectRequest;
+import com.kelltontech.volley.ext.RequestManager;
+import com.kelltontech.volley.ui.activity.BaseActivity;
+import com.kelltontech.volley.utils.DateTimeUtils;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener;
 
 import java.lang.reflect.Type;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,20 +62,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-
-
-import com.kelltontech.volley.ext.GsonObjectRequest;
-import com.kelltontech.volley.ext.RequestManager;
-import com.kelltontech.volley.ui.activity.BaseActivity;
-import com.kelltontech.volley.utils.DateTimeUtils;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateSetListener;
-
-import static com.dhdigital.lms.R.drawable.calendar;
 
 /**
  * Created by admin on 28/09/17.
@@ -204,6 +186,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         }
         mSelectedLeaveType = leaveTypeList.get(0);
         getLeavebalance();
+
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, adapterlist);
         adapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
         leaveTypeSpinner.setAdapter(adapter);
@@ -757,8 +740,8 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         postPayload.put("userId",userid);
         postPayload.put("startDate",mSelectedStartDate);
         postPayload.put("endDate",mSelectedEndDate);
-        postPayload.put("leaveReason",reasonId);
-        postPayload.put("leaveType",leaveType);
+        postPayload.put("reasonId", reasonId);
+        postPayload.put("leaveTypeName", leaveType);
         postPayload.put("comments",mReasonDescriptionText.getText().toString());
 
         String payload = gson.toJson(postPayload);

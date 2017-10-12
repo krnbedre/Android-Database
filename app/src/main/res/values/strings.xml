@@ -33,7 +33,7 @@
     <string name="edit_cc">Edit</string>
     <string name="reset_cc">reset</string>
     <string name="lbl_submit">Submit</string>
-    <string name="lbl_apply_search">APPLY &amp; SEARCH</string>
+    <string name="lbl_apply_search">Apply</string>
     <string name="lbl_add_multiple_tr">Add Multiple TR</string>
 
     <string name="new_travel_request">New Travel Request</string>
@@ -396,5 +396,6 @@
 
     <string name="rejectReason">Reject Reason</string>
     <string name="loading">Loading...</string>
+    <string name="chart_title">Applied Leaves in Year</string>
 
 </resources>

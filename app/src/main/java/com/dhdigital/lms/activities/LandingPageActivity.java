@@ -3,26 +3,21 @@ package com.dhdigital.lms.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,7 +28,8 @@ import com.dhdigital.lms.adapters.ExpandableListDataPump;
 import com.dhdigital.lms.db.MasterDataTable;
 import com.dhdigital.lms.fragments.PieChartFragment;
 import com.dhdigital.lms.glide.HeaderLoader;
-import com.dhdigital.lms.modal.CityMasterData;
+import com.dhdigital.lms.modal.DashBoardModal;
+import com.dhdigital.lms.modal.Employee;
 import com.dhdigital.lms.modal.Files;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Holiday;
@@ -41,20 +37,15 @@ import com.dhdigital.lms.modal.LeaveEntitlement;
 import com.dhdigital.lms.modal.LeaveType;
 import com.dhdigital.lms.modal.MasterData;
 import com.dhdigital.lms.modal.MonthWiseLeave;
-import com.dhdigital.lms.modal.ProviderMasterData;
-import com.dhdigital.lms.modal.TravelReason;
 import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
-import com.dhdigital.lms.util.AnimUtil;
 import com.dhdigital.lms.util.AppConstants;
 import com.dhdigital.lms.util.AppUtil;
 import com.dhdigital.lms.util.CircleTransform;
 import com.dhdigital.lms.util.PreferenceUtil;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import com.kelltontech.volley.ext.GsonObjectRequest;
 import com.kelltontech.volley.ext.RequestManager;
 import com.kelltontech.volley.ui.activity.BaseActivity;
@@ -65,6 +56,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.LOG_OUT;
+import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.MY_LEAVES;
+import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.NEW_LEAVE_REQUEST;
+import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.PERSONAL_TASK;
 
 /**
  * Created by Kiran Bedre on 6/15/2016.
@@ -95,16 +91,24 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
     private int lastExpandedPosition = -1;
     private String mLastLoggedInUser = null;
 
-    private TextView userName,mTxvNotify;
+    private TextView userName, mUserIDTextView;
     private String loggedInUserName;
     private ImageView mUserIcon;
     private Context mContext;
     private int numberOfResMasterDataReq = 0;
     private FrameLayout mChartContainer;
     private ArrayList<MonthWiseLeave> monthWiseLeaveList = new ArrayList<>();
+    private ArrayList<Employee> employeeList = new ArrayList<>();
+    private List<LeaveType> leaveTypeList = new ArrayList<LeaveType>();
+
+    private AppCompatSpinner leaveTypeSpinner, employeeSpinner;
+    private LeaveType mSelectedLeaveType = null;
+    private TextView mleaveTypeText, mLeaveBalanceText;
+    private DashBoardModal mDashBoardData;
 
 
     public static int getThemeAccentColor (final Context context) {
+
         final TypedValue value = new TypedValue();
         context.getTheme ().resolveAttribute (R.attr.colorAccent, value, true);
         Log.d(AppConstants.APP_TAG,"Color Accent : "+value.data);
@@ -125,6 +129,9 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         mContext = getApplicationContext();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.baselayout);
         mChartContainer = (FrameLayout) findViewById(R.id.charts_container);
+        leaveTypeSpinner = (AppCompatSpinner) findViewById(R.id.leave_type_spn);
+        employeeSpinner = (AppCompatSpinner) findViewById(R.id.employee_spn);
+        mLeaveBalanceText = (TextView) findViewById(R.id.leave_bal_txt);
 
 
         ViewTreeObserver viewTreeObserver = mDrawerLayout.getViewTreeObserver();
@@ -142,8 +149,10 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         loadWidgets();
         buildDrawerItems();
         getThemeAccentColor(this);
+
         //if (MasterDataTable.getInstance(mContext).getRefreshStatus() == 0)
         refreshMasterData();
+
 
     }
 
@@ -176,6 +185,88 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
     }
 
 
+    private void instantiateLeaveTypeSpinner() {
+
+        leaveTypeList = MasterDataTable.getInstance(mContext).getAllByleaveType();
+        List<String> adapterlist = new ArrayList<String>();
+        for (int i = 0; i < leaveTypeList.size(); i++) {
+            adapterlist.add(i, leaveTypeList.get(i).getName());
+        }
+        mSelectedLeaveType = leaveTypeList.get(0);
+
+        getLeavebalance();
+        //requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()),null);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, adapterlist);
+        adapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
+        leaveTypeSpinner.setAdapter(adapter);
+        leaveTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //mleaveTypeText.setText(leaveTypeList.get(i).getName());
+                mSelectedLeaveType = leaveTypeList.get(i);
+                requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()), null);
+                updateLeaveBalanceCount();
+                getLeavebalance();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+    }
+
+
+    private void instantiateEmployeeSpinner() {
+
+
+        List<String> emp_adapterlist = new ArrayList<String>();
+        final List<String> employeeIds = new ArrayList<String>();
+        emp_adapterlist.add(0, "Self");
+        employeeIds.add(0, String.valueOf(GlobalData.gLoggedInUser.getEmployee().getId()));
+        for (int i = 0; i < employeeList.size(); i++) {
+            emp_adapterlist.add(i + 1, employeeList.get(i).getCompleteName());
+            employeeIds.add(i + 1, String.valueOf(employeeList.get(i).getId()));
+        }
+        //requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()),null);
+        ArrayAdapter emp_adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, emp_adapterlist);
+        emp_adapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
+        employeeSpinner.setAdapter(emp_adapter);
+        employeeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+
+                if (position != 0) {
+                    findViewById(R.id.leave_bal_container).setVisibility(View.INVISIBLE);
+                } else {
+                    findViewById(R.id.leave_bal_container).setVisibility(View.VISIBLE);
+                }
+                requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()), employeeIds.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+    }
+
+
+    private void updateLeaveBalanceCount() {
+
+
+        //float entitledLeaves = (float) mDashBoardData.getLeaveEntitlement().get(mSelectedLeaveType.getId());
+        //float leavebalance = (float) mDashBoardData.getLeaveBalance().get(mSelectedLeaveType.getId());
+
+        LeaveEntitlement entitlement = MasterDataTable.getInstance(mContext).getLeaveEntitlement(mSelectedLeaveType.getId());
+
+        mLeaveBalanceText.setText(mSelectedLeaveType.getBalance() + "/" + (float) entitlement.getCount());
+    }
+
+
+
 
     private void loadChart() {
 
@@ -198,12 +289,15 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
     private void buildDrawerItems(){
         userName = (TextView) findViewById(R.id.textView_username);
         mUserIcon = (ImageView) findViewById(R.id.userDispIcon);
+        mUserIDTextView = (TextView) findViewById(R.id.textView_userId);
+
 
         Log.d("TAG", "User details USER::" );
         if (GlobalData.gLoggedInUser != null && GlobalData.gLoggedInUser.getEmployee() != null) {
             loggedInUserName = GlobalData.gLoggedInUser.getEmployee().getFirstName() + " " + GlobalData.gLoggedInUser.getEmployee().getLastName();
             Log.d("TAG", "User details USER::" + loggedInUserName);
             userName.setText(loggedInUserName);
+            mUserIDTextView.setText("Employee Id: " + String.valueOf(GlobalData.gLoggedInUser.getEmployee().getId()));
         }
         buildDraweList();
     }
@@ -215,13 +309,29 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new CustomExpandableListAdapter(this, expandableListTitle, expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
+        expandableListView.setDivider(getDrawable(android.R.drawable.divider_horizontal_dim_dark));
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
             public void onGroupExpand(int groupPosition) {
 
-                if(groupPosition == 2 ) {
-                    onLogoutBtnClicked();
+                switch (groupPosition) {
+                    case NEW_LEAVE_REQUEST:
+                        View title = findViewById(R.id.expandedListItem);
+                        Intent newLeaveReq = new Intent(mContext, NewLeaveRequestActivity.class);
+                        startActivity(newLeaveReq);
+                        break;
+                    case MY_LEAVES:
+                        Intent myLeavesAct = new Intent(mContext, MyLeavesTabActivity.class);
+                        startActivity(myLeavesAct);
+                        break;
+                    case PERSONAL_TASK:
+                        Intent myTasks = new Intent(mContext, ApproverTasksActivity.class);
+                        startActivity(myTasks);
+                        break;
+                    case LOG_OUT:
+                        onLogoutBtnClicked();
+                        break;
                 }
 
                 if (lastExpandedPosition != -1
@@ -229,6 +339,8 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                     //AnimUtil.collapseItem(expandableListView.getChildAt(lastExpandedPosition),expandableListView.getChildAt(groupPosition));
                     expandableListView.collapseGroup(lastExpandedPosition);
                 }
+
+                mDrawerLayout.closeDrawers();
 
 
                 lastExpandedPosition = groupPosition;
@@ -253,25 +365,10 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                                 .get(groupPosition))
                         .get(childPosition)){
 
-                    case AppConstants.NEW_LEAVE_REQUEST:
-                        View title = findViewById(R.id.expandedListItem);
-                        Intent newLeaveReq = new Intent(mContext,NewLeaveRequestActivity.class);
-                        startActivity(newLeaveReq);
-                        break;
-                    case AppConstants.MY_LEAVES:
-                        Intent myLeavesAct = new Intent(mContext,MyLeavesTabActivity.class);
-                        startActivity(myLeavesAct);
-                        break;
-                    case AppConstants.PERSONAL_TASK:
-                        Intent myTasks = new Intent(mContext,ApproverTasksActivity.class);
-                        startActivity(myTasks);
-                        break;
-                    case AppConstants.LOG_OUT:
-                        onLogoutBtnClicked();
-                        break;
+
 
                 }
-                mDrawerLayout.closeDrawers();
+
                 return false;
             }
         });
@@ -402,8 +499,33 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
             case NetworkEvents.LEAVE_DASHBOARD:
                 removeProgressDialog();
                 if (status && serviceResponse instanceof List<?>) {
+                    //mDashBoardData = (DashBoardModal) serviceResponse;
                     monthWiseLeaveList = (ArrayList<MonthWiseLeave>) serviceResponse;
                     loadChart();
+                    updateLeaveBalanceCount();
+                }
+                break;
+            case NetworkEvents.MY_LEAVES_BALANCE:
+                if (status && serviceResponse instanceof Map) {
+                    Map<String, Double> responseMap = new HashMap();
+                    responseMap = (Map<String, Double>) serviceResponse;
+                    if (null != responseMap) {
+
+                        mSelectedLeaveType.setBalance(
+                                responseMap.containsKey(mSelectedLeaveType.getCode()) ?
+                                        responseMap.get(mSelectedLeaveType.getCode()) :
+                                        0);
+                        updateLeaveBalanceCount();
+                    }
+                }
+                break;
+            case NetworkEvents.GET_EMPLOYEES:
+                removeProgressDialog();
+                if (status && serviceResponse instanceof List<?>) {
+                    //mDashBoardData = (DashBoardModal) serviceResponse;
+                    employeeList = (ArrayList<Employee>) serviceResponse;
+                    instantiateEmployeeSpinner();
+                    //updateLeaveBalanceCount();
                 }
                 break;
             default:
@@ -447,7 +569,9 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         super.onResume();
         Log.d(AppConstants.APP_TAG,"-onResume-"+getLocalClassName());
 
-        requestDashBoardData(null,null);
+        //requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()),null);
+        instantiateLeaveTypeSpinner();
+        getEmployeesUnderLoggedInUser();
         //showProgressDialog("Setting up...");
     }
 
@@ -672,6 +796,7 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         String URL = APIUrls.USER_DASHBOARD;
         if (leaveTypeId == null) {
          if (userId == null) {
+
          }else {
              URL = URL + "?userId="+userId;
          }
@@ -682,17 +807,16 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                 URL = URL + "&userId="+userId;
             }
         }
-        //String URL = APIUrls.USER_DASHBOARD+"?leaveTypeId="+leaveTypeId+"&userId="+userId;
 
-        Type type = new TypeToken<ArrayList>() {
+        Type type = new TypeToken<ArrayList<MonthWiseLeave>>() {
         }.getType();
 
 
         Log.d("URL", URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<List<MonthWiseLeave>>(URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.LEAVE_DASHBOARD)) {
+        RequestManager.addRequest(new GsonObjectRequest<List>(URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.LEAVE_DASHBOARD)) {
             @Override
-            public void deliverResponse(List<MonthWiseLeave> response, Map<String, String> responseHeaders) {
+            public void deliverResponse(List response, Map<String, String> responseHeaders) {
 
                 updateUi(true,NetworkEvents.LEAVE_DASHBOARD,response);
 
@@ -701,6 +825,43 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
     }
 
 
+    public void getLeavebalance() {
+
+        Type type = new TypeToken<Map>() {
+        }.getType();
+
+        RequestManager.addRequest(new GsonObjectRequest<Object>(APIUrls.LEAVE_BAL_URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.MY_LEAVES_BALANCE)) {
+
+            @Override
+            public void deliverResponse(Object response, Map<String, String> responseHeaders) {
+
+                updateUi(true, NetworkEvents.MY_LEAVES_BALANCE, response);
+            }
+
+        }, AppConstants.REQUEST_TIMEOUT_AVG);
+    }
+
+
+    private void getEmployeesUnderLoggedInUser() {
+
+        showProgressDialog(getString(R.string.loading));
+        Type type = new TypeToken<ArrayList<Employee>>() {
+        }.getType();
+
+
+        Log.d("URL", APIUrls.GET_EMPLOYEES);
+
+        RequestManager.addRequest(new GsonObjectRequest<List>(APIUrls.GET_EMPLOYEES, null, type, new VolleyErrorListener(this, this, NetworkEvents.GET_EMPLOYEES)) {
+
+            @Override
+            public void deliverResponse(List response, Map<String, String> responseHeaders) {
+
+                updateUi(true, NetworkEvents.GET_EMPLOYEES, response);
+            }
+
+        }, AppConstants.REQUEST_TIMEOUT_AVG);
+
+    }
 
 
 }

@@ -8,47 +8,66 @@
         android:id="@+id/imageView_bg_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
         android:background="@color/white"
+        android:scaleType="centerCrop"
 
 
         />
 
-    <TextView
-        android:id="@+id/textView_username"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|bottom"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:fontFamily="@string/font1"
-        android:text="@string/app_name"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/userDispIcon"
-        android:layout_width="80sp"
-        android:layout_height="80sp"
         android:layout_gravity="left|center_vertical"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/ten_dp"
-        android:src="@drawable/user_disp_icon" />
+        android:weightSum="3">
 
+        <ImageView
+            android:id="@+id/userDispIcon"
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:src="@drawable/user_icon_disp" />
 
-    <ImageView
-        android:id="@+id/company_logo"
-        android:layout_width="120sp"
-        android:layout_height="60sp"
-        android:layout_gravity="top|right|center_vertical"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:paddingLeft="@dimen/ten_dp"
-        android:src="@drawable/dhdigital_logo" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textView_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@string/font1"
+                android:text="@string/app_name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_userId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:fontFamily="@string/font1"
+                android:text="@string/app_name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14dp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2sp"
+        android:layout_gravity="bottom"
+        android:background="@color/common_grey_4"></View>
 
 </FrameLayout>

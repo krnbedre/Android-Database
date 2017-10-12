@@ -9,7 +9,39 @@ import android.os.Parcelable;
 
 public class LeaveEntitlement implements Parcelable{
 
+    public static final Creator<LeaveEntitlement> CREATOR = new Creator<LeaveEntitlement>() {
+        @Override
+        public LeaveEntitlement createFromParcel(Parcel in) {
+            return new LeaveEntitlement(in);
+        }
+
+        @Override
+        public LeaveEntitlement[] newArray(int size) {
+            return new LeaveEntitlement[size];
+        }
+    };
     private int id;
+    private String code;
+    private String name;
+    private LeaveType leaveType;
+    private int count = 0;
+    private long validFrom;
+    private long validTo;
+
+    public LeaveEntitlement() {
+
+    }
+
+    protected LeaveEntitlement(Parcel in) {
+        id = in.readInt();
+        code = in.readString();
+        name = in.readString();
+        leaveType = in.readParcelable(LeaveType.class.getClassLoader());
+        count = in.readInt();
+        validFrom = in.readLong();
+        validTo = in.readLong();
+
+    }
 
     public int getId() {
         return id;
@@ -50,42 +82,6 @@ public class LeaveEntitlement implements Parcelable{
     public void setCount(int count) {
         this.count = count;
     }
-
-    private String code;
-    private String name;
-    private LeaveType leaveType;
-    private int count;
-    private long validFrom;
-    private long validTo;
-
-
-    public LeaveEntitlement(){
-
-    }
-
-    protected LeaveEntitlement(Parcel in) {
-        id = in.readInt();
-        code = in.readString();
-        name = in.readString();
-        leaveType = in.readParcelable(LeaveType.class.getClassLoader());
-        count = in.readInt();
-        validFrom = in.readLong();
-        validTo = in.readLong();
-
-    }
-
-
-    public static final Creator<LeaveEntitlement> CREATOR = new Creator<LeaveEntitlement>() {
-        @Override
-        public LeaveEntitlement createFromParcel(Parcel in) {
-            return new LeaveEntitlement(in);
-        }
-
-        @Override
-        public LeaveEntitlement[] newArray(int size) {
-            return new LeaveEntitlement[size];
-        }
-    };
 
     @Override
     public int describeContents() {

@@ -116,11 +116,11 @@ public class TaskActionDialogBuilder {
         });
     }
 
-    public AlertDialog build(String title, OnPositiveOptListener onPositiveOptListener) {
+    public AlertDialog build(String title, String buttontitle, OnPositiveOptListener onPositiveOptListener) {
         this.onPositiveOptListener = onPositiveOptListener;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(rootView).setCancelable(false);
-        builder.setTitle(title).setPositiveButton(title, null).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        builder.setTitle(title).setPositiveButton(buttontitle, null).setNegativeButton("Close", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -131,6 +131,7 @@ public class TaskActionDialogBuilder {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                theButton.setTextColor(context.getColor(R.color.greenBulb));
                 theButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -141,7 +142,7 @@ public class TaskActionDialogBuilder {
                 });
             }
         });
-        dialog.getWindow().setBackgroundDrawableResource(R.color.white);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.card_style);
         return dialog;
     }
 

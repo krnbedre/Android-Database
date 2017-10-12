@@ -1,7 +1,5 @@
 package com.dhdigital.lms.net;
 
-import com.dhdigital.lms.util.AppConstants;
-
 /**
  * Created by DarkHorse on 6/11/15.
  */
@@ -25,6 +23,7 @@ public class APIUrls {
     public static final String APPROVER_TASK_URL = BASE_URL + "approve";
     public static final String REJECT_TASK_URL = BASE_URL + "reject";
     public static final String FILE_DOWNLOAD = BASE_URL + "file/download";
+    public static final String GET_EMPLOYEES = BASE_URL + "employee/getEmployees";
 
 
 

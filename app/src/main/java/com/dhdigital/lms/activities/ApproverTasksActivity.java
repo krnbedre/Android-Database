@@ -1,16 +1,12 @@
 package com.dhdigital.lms.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -19,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.adapters.MyLeavesAdapter;
+import com.dhdigital.lms.fragments.FilterDialog;
+import com.dhdigital.lms.modal.Employee;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.LeaveModal;
+import com.dhdigital.lms.modal.MasterData;
 import com.dhdigital.lms.modal.MyleavesResponse;
 import com.dhdigital.lms.modal.TaskActionRequest;
 import com.dhdigital.lms.modal.TaskFilterParams;
@@ -55,22 +51,22 @@ import java.util.Map;
  * Created by admin on 09/10/17.
  */
 
-public class ApproverTasksActivity extends BaseActivity implements ListItemClickListener{
+public class ApproverTasksActivity extends BaseActivity implements ListItemClickListener, FilterDialog.OnFilterAppliedListener {
 
+    String mTaskIdApprove, mTaskIdReject, mReferenceNo;
     private boolean isRefreshingList = false;
     private int mTRPageIndex = 0;
     private int mECPageIndex = 0;
     private int totalElements;
-
     private ListView mListView;
-
     private MyLeavesAdapter mLeavesAdapter;
     private List<LeaveModal> mLeavesList = new ArrayList<LeaveModal>();
     private TextView emptyView;
     private TaskActionRequest taskActionRequest;
     //TravelRequest trObj;
     private TaskRejectRequest taskactionRejectRequest = new TaskRejectRequest();
-    String mTaskIdApprove, mTaskIdReject, mReferenceNo;
+    private ArrayList<Employee> employeeList = new ArrayList<>();
+    private ArrayList<MasterData> teamList = new ArrayList<>();
 
 
     @Override
@@ -128,17 +124,6 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void updateUi(boolean status, int actionID, Object serviceResponse) {
@@ -284,7 +269,7 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
         taskActionRequest.setDelegateToEmpNo(null);
         taskActionRequest.setDelegateTo(null);
         TaskActionDialogBuilder builder = new TaskActionDialogBuilder(this, false, false, false, null); // providing comment not mandatory for "Approve"
-        builder.build("Approve Task", new TaskActionDialogBuilder.OnPositiveOptListener() {
+        builder.build("APPROVE LEAVE", "APPROVE", new TaskActionDialogBuilder.OnPositiveOptListener() {
             @Override
             public void onPositionOpt(Object object, String comment) {
                 taskActionRequest.setComments(comment);
@@ -303,7 +288,7 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
         //taskactionRejectRequest.setTravelRequest(trObj);
 
         TaskActionDialogBuilder builder = new TaskActionDialogBuilder(this, true, false, false, null); // providing comment in "Reject" is mandatory
-        builder.build("Reject Task", new TaskActionDialogBuilder.OnPositiveOptListener() {
+        builder.build("REJECT LEAVE", "REJECT", new TaskActionDialogBuilder.OnPositiveOptListener() {
             @Override
             public void onPositionOpt(Object object, String comment) {
                 taskActionRequest.setComments(comment);
@@ -364,7 +349,36 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.filter_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_search:
+                onFilterClicked();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void onFilterClicked() {
+        FilterDialog dialog = new FilterDialog(this, employeeList, teamList, this);
+        dialog.show();
+
+    }
 
 
+    @Override
+    public void onFilterApplied(String userId, String teamId) {
 
+        executeMyLeavesAPI(NetworkEvents.GET_MY_TAKS, true);
+    }
 }
