@@ -1,28 +1,35 @@
-package com.dhdigital.lms.fragments;
+package com.dhdigital.lms.activities;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dhdigital.lms.R;
+import com.dhdigital.lms.adapters.ListAdapter;
 import com.dhdigital.lms.modal.Employee;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.MasterData;
 import com.dhdigital.lms.modal.UserRole;
 import com.dhdigital.lms.net.APIUrls;
+import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.volley.ext.GsonObjectRequest;
 import com.kelltontech.volley.ext.RequestManager;
-import com.kelltontech.volley.ui.IScreen;
+import com.kelltontech.volley.ui.activity.BaseActivity;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,75 +37,75 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by admin on 12/10/17.
+ * Created by admin on 18/10/17.
  */
 
-public class FilterDialog extends Dialog implements View.OnClickListener {
+public class EmployeeLookUpPage extends BaseActivity {
 
-    private Context mContext;
-    private OnFilterAppliedListener mOnFilterAppliedListener;
+    ListAdapter listAdapter;
+    private AppCompatSpinner mTeamSpinner;
+    private ListView mEmployeeListView;
     private ArrayList<Employee> employeeList = new ArrayList<>();
     private ArrayList<MasterData> teamList = new ArrayList<>();
-    private AppCompatSpinner teamSpinner, employeeSpinner;
     private String mSelectedTeamId = null;
     private String mSelectedEmpId = null;
-    private IScreen mIScreenBinder;
-    private ArrayAdapter team_adapter, emp_adapter;
-
-
-    public FilterDialog(Context context, IScreen iscreen, OnFilterAppliedListener listener) {
-        super(context, R.style.filter_floating_screen_dialog);
-        this.mContext = context;
-        this.teamList = teamList;
-        this.mIScreenBinder = iscreen;
-        this.mOnFilterAppliedListener = listener;
-    }
+    private ArrayAdapter team_adapter;
+    private EditText searchField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        setContentView(R.layout.filter_dialog_layout);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //instantiateEmployeeSpinner();
-        employeeSpinner = (AppCompatSpinner) findViewById(R.id.employee_spn);
-        teamSpinner = (AppCompatSpinner) findViewById(R.id.team_spn);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.employee_look_up_page);
+        mTeamSpinner = (AppCompatSpinner) findViewById(R.id.employee_spn);
+        mEmployeeListView = (ListView) findViewById(R.id.list_view);
+        listAdapter = new ListAdapter(this, employeeList);
+        mEmployeeListView.setAdapter(listAdapter);
+        initToolBar();
         getMyTeams();
-
-        employeeSpinner.setVisibility(View.VISIBLE);
-        findViewById(R.id.textView_clear).setOnClickListener(this);
-        findViewById(R.id.button_apply).setOnClickListener(this);
-    }
-
-    private void instantiateEmployeeSpinner() {
-
-
-        List<String> emp_adapterlist = new ArrayList<String>();
-
-        final List<String> employeeIds = new ArrayList<String>();
-        for (int i = 0; i < employeeList.size(); i++) {
-            emp_adapterlist.add(i, employeeList.get(i).getCompleteName());
-            employeeIds.add(i, String.valueOf(employeeList.get(i).getId()));
-        }
-        //requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()),null);
-        emp_adapter = new ArrayAdapter<>(mContext, R.layout.support_simple_spinner_dropdown_item, emp_adapterlist);
-        emp_adapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
-        employeeSpinner.setAdapter(emp_adapter);
-        employeeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        instantiateSearchListener();
+        mEmployeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                mSelectedEmpId = employeeIds.get(position);
-                // mSelectedTeamId = null;
+                Intent data = new Intent();
+                data.putExtra(AppConstants.EMP_FILTER, String.valueOf(employeeList.get(position).getId()));
+                data.putExtra(AppConstants.EMP_NAME_FILTER, employeeList.get(position).getCompleteName());
+                setResult(AppConstants.EMPLOYEE_FILTER_INTENT, data);
+                finish();
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-
         });
     }
 
+    private void instantiateSearchListener() {
+        searchField = (EditText) findViewById(R.id.search_box);
+        searchField.setHint("Search Employee");
+        searchField.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                listAdapter.getFilter().filter(s.toString());
+                ArrayList<Employee> adapter = new ArrayList<>();
+                for (Employee employee : employeeList) {
+                    if (employee.getFirstName().toLowerCase().contains(s.toString().toLowerCase())) {
+                        adapter.add(employee);
+                    }
+                }
+                listAdapter = new ListAdapter(EmployeeLookUpPage.this, adapter);
+                mEmployeeListView.setAdapter(listAdapter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
 
     private void instantiateTeamSpinner() {
 
@@ -106,13 +113,14 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
         if (null != employee) {
             List<String> team_adapterlist = new ArrayList<String>();
 
+            team_adapterlist.clear();
             if (GlobalData.gLoggedInUser.getUserRoles() != null) {
 
                 for (UserRole role : GlobalData.gLoggedInUser.getUserRoles()
                         ) {
                     if (role.getAuthority().equalsIgnoreCase("SENIOR_MANAGEMENT")) {
                         MasterData data = new MasterData();
-                        data.setName("My Team");
+                        data.setName("Reporting to me");
                         teamList.add(data);
                     }
                 }
@@ -124,10 +132,10 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
             }
 
             //requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()),null);
-            team_adapter = new ArrayAdapter<>(mContext, R.layout.support_simple_spinner_dropdown_item, team_adapterlist);
+            team_adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, team_adapterlist);
             team_adapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
-            teamSpinner.setAdapter(team_adapter);
-            teamSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            mTeamSpinner.setAdapter(team_adapter);
+            mTeamSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
@@ -150,37 +158,6 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
     }
 
 
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-
-        switch (id) {
-            case R.id.textView_clear:
-                onClearBtnClicked();
-                break;
-            case R.id.button_apply:
-                onApplySearchBtnClicked();
-                break;
-
-        }
-
-    }
-
-    private void onClearBtnClicked() {
-        mSelectedEmpId = null;
-        mSelectedTeamId = null;
-        //instantiateEmployeeSpinner();
-        instantiateTeamSpinner();
-    }
-
-    private void onApplySearchBtnClicked() {
-        if (mOnFilterAppliedListener != null) {
-
-            mOnFilterAppliedListener.onFilterApplied(mSelectedEmpId, mSelectedTeamId);
-        }
-        dismiss();
-    }
-
     private void getMyTeams() {
 
         Type type = new TypeToken<ArrayList<MasterData>>() {
@@ -190,7 +167,7 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
 
         Log.d("URL", URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<List>(URL, null, type, new VolleyErrorListener(mIScreenBinder, mContext, NetworkEvents.GET_TEAMS)) {
+        RequestManager.addRequest(new GsonObjectRequest<List>(URL, HeaderManager.prepareMasterDataHeaders(this), null, type, new VolleyErrorListener(this, this, NetworkEvents.GET_TEAMS)) {
 
             @Override
             public void deliverResponse(List response, Map<String, String> responseHeaders) {
@@ -211,7 +188,7 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
 
         Log.d("URL", URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<List>(URL, null, type, new VolleyErrorListener(mIScreenBinder, mContext, NetworkEvents.GET_EMPLOYEES)) {
+        RequestManager.addRequest(new GsonObjectRequest<List>(URL, HeaderManager.prepareMasterDataHeaders(this), null, type, new VolleyErrorListener(this, this, NetworkEvents.GET_EMPLOYEES)) {
 
             @Override
             public void deliverResponse(List response, Map<String, String> responseHeaders) {
@@ -222,6 +199,7 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
         }, AppConstants.REQUEST_TIMEOUT_AVG);
 
     }
+
 
     private void getEmployeesUnderMe() {
 
@@ -232,7 +210,7 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
 
         Log.d("URL", URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<List>(URL, null, type, new VolleyErrorListener(mIScreenBinder, mContext, NetworkEvents.GET_EMPLOYEES)) {
+        RequestManager.addRequest(new GsonObjectRequest<List>(URL, HeaderManager.prepareMasterDataHeaders(this), null, type, new VolleyErrorListener(this, this, NetworkEvents.GET_EMPLOYEES)) {
 
             @Override
             public void deliverResponse(List response, Map<String, String> responseHeaders) {
@@ -244,6 +222,8 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
 
     }
 
+
+    @Override
     public void updateUi(boolean status, int actionID, Object serviceResponse) {
 
         switch (actionID) {
@@ -252,10 +232,10 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
                     if (employeeList.size() > 0) {
                         employeeList.clear();
                     }
-                    employeeList = (ArrayList<Employee>) serviceResponse;
-                    employeeSpinner.setVisibility(View.VISIBLE);
-                    instantiateEmployeeSpinner();
-                    emp_adapter.notifyDataSetChanged();
+                    employeeList.clear();
+                    ArrayList<Employee> employeesList = (ArrayList<Employee>) serviceResponse;
+                    employeeList.addAll(employeesList);
+                    listAdapter.notifyDataSetChanged();
                 }
                 break;
             case NetworkEvents.GET_TEAMS:
@@ -268,11 +248,28 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
                     instantiateTeamSpinner();
                 }
         }
+
     }
 
 
-    public interface OnFilterAppliedListener {
-        public void onFilterApplied(String userId, String teamId);
+    private void initToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.in_toolbar);
+        TextView tvTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        ImageView ivMyInbox = (ImageView) toolbar.findViewById(R.id.txv_summary);
+        ivMyInbox.setVisibility(View.GONE);
+
+        tvTitle.setText("Select Employee");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public void onEvent(int eventId, Object eventData) {
+
+    }
+
+    @Override
+    public void getData(int actionID) {
+
+    }
 }

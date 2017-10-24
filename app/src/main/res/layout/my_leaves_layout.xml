@@ -3,8 +3,8 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_grey_4">
+    android:background="@color/common_grey_4"
+    android:orientation="vertical">
 
 
     <include
@@ -24,7 +24,8 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:drawablePadding="20sp"
         android:gravity="center"
-        android:textColor="@color/button_bg_default"
+        android:textColor="@color/colorPrimary"
         android:textSize="20dp" />
 </LinearLayout>

@@ -12,9 +12,13 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.dhdigital.lms.modal.FailResponse;
 import com.dhdigital.lms.util.AppConstants;
+import com.google.gson.Gson;
 import com.kelltontech.volley.ui.IScreen;
+
+import java.io.UnsupportedEncodingException;
 
 
 public class VolleyErrorListener implements Response.ErrorListener {
@@ -29,9 +33,18 @@ public class VolleyErrorListener implements Response.ErrorListener {
         this.context = context;
     }
 
+    private static boolean isServerProblem(VolleyError error) {
+        return (error instanceof ServerError || error instanceof AuthFailureError || error instanceof ParseError || error instanceof TimeoutError);
+    }
+
+    private static boolean isNetworkProblem(VolleyError error) {
+        return (error instanceof NetworkError || error instanceof NoConnectionError);
+    }
+
     @Override
     public void onErrorResponse(VolleyError error) {
         NetworkResponse networkResponse = error.networkResponse;
+
 
         Log.e(TAG, "@UMESH onErrorResponse, networkResponse: " + ((networkResponse == null) ? null : networkResponse.statusCode + "Network Res: "+networkResponse.toString()) );
         Log.e(TAG, "@UMESH onErrorResponse, error: " + error.getStackTrace() +"\n" + "message : "+error.getLocalizedMessage() + "Message : "+error.getMessage());
@@ -46,21 +59,24 @@ public class VolleyErrorListener implements Response.ErrorListener {
         } else if (error instanceof ParseError) {
             screen.updateUi(false, action, AppConstants.ERROR_MSG_PARSE);
         } else if (error instanceof ServerError) {
-            screen.updateUi(false, action, AppConstants.ERROR_MSG_SERVER);
+            //screen.updateUi(false, action, AppConstants.ERROR_MSG_SERVER);
+            try {
+                FailResponse failResponse = new Gson().fromJson(new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers)), FailResponse.class);
+                screen.updateUi(false, action, failResponse);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         } else if (error instanceof TimeoutError) {
             screen.updateUi(false, action, AppConstants.ERROR_MSG_TIMEOUT);
         } else {
-            screen.updateUi(false, action, AppConstants.ERROR_MSG_GENERIC);
+            //screen.updateUi(false, action, AppConstants.ERROR_MSG_GENERIC);
+            try {
+                FailResponse failResponse = new Gson().fromJson(new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers)), FailResponse.class);
+                screen.updateUi(false, action, failResponse);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-
-    private static boolean isServerProblem(VolleyError error) {
-        return (error instanceof ServerError || error instanceof AuthFailureError || error instanceof ParseError || error instanceof TimeoutError);
-    }
-
-    private static boolean isNetworkProblem(VolleyError error) {
-        return (error instanceof NetworkError || error instanceof NoConnectionError);
     }
 
 

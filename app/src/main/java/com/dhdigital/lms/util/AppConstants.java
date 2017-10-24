@@ -5,7 +5,7 @@ package com.dhdigital.lms.util;
  * DarkHorse BOA
  */
 public interface AppConstants {
-    public static final String APP_TAG = "TravelExpense";
+    public static final String APP_TAG = "LeaveMgmt";
     public static final int TIMEOUT_SPLASH_SCREEN = 3000;
 
     public static final int REQUEST_TIMEOUT_MIN = 5000; // in millis
@@ -73,7 +73,7 @@ public interface AppConstants {
 
 
     public static final String LEAVE = "Leave";
-    public static final String NEW_LEAVE_REQUEST = "New Leave Request";
+    public static final String APPLY_LEAVE = "Apply Leave";
     public static final String MY_LEAVES = "My Leaves";
 
 
@@ -104,16 +104,9 @@ public interface AppConstants {
 
     public static final String LOG_OUT = "Log out";
 
-    public static final String TRAVEL = "Travel";
-    public static final String EXPENSE = "Expense";
-    public static final String REPORTS = "Reports";
-    public static final String SETTINGS = "Settings";
-    public static final String VIEW_REPORTS = "View Reports";
-    public static final String TASK_TYPE = "task_type";
 
-    public static final String PERSONAL_TASK = "Personal Tasks";
-    public static final String TRAVEL_DESK_TASK = "Travel Desk Tasks";
-    public static final String FINANCE_TASK = "Finance Tasks";
+    public static final String APPROVE_LEAVE = "Approve Leave";
+
     public static final String VIEW_POLICIES = "Policies";
     public static final String CHANGE_PASSWORD = "Change Password";
     public static final String USER_NAME = "Employee User name";
@@ -141,6 +134,28 @@ public interface AppConstants {
     public static final int SERVICE_ADDED = 6;
 
     public static final String LINKING_TR = "linking_tr";
+    public static final int MY_LEAVES_FILTER_INTENT = 106;
+    public static final int EMPLOYEE_FILTER_INTENT = 109;
+    public static final String LEAVE_TYPE_FILTER = "leave type filter";
+    public static final String EMP_FILTER = "emp filter";
+    public static final String EMP_NAME_FILTER = "emp name filter";
+    public static final String STATUS_FILTER = "status filter";
+    public static final String START_DATE_FILTER = "start date filter";
+    public static final String END_DATE_FILTER = "end date filter";
+    public static final String APPROVER = "approver";
+    public static final String REQUESTOR = "requestor";
+    public static final String CUMULATIVE_LEAVE_CHART = "leaves chart";
+    public static final String MONTH_LEAVE_CHART = "month leaves chart";
+
+    public static final String APPROVED = "Approved";
+
+    public static final String REJECTED = "Rejected";
+
+    public static final String CANCELLED = "Cancelled";
+
+    public static final String PENDING = "Pending";
+
+
 
     // Adding status codes
 

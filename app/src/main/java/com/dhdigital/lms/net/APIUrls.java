@@ -4,6 +4,7 @@ package com.dhdigital.lms.net;
  * Created by DarkHorse on 6/11/15.
  */
 public class APIUrls {
+
     public static final String MY_INBOX_SEARCH = "&search=%7B%22candidateGroup%22:null";
     private static final String DEV_BASE_URL = "http://219.65.70.150/lms/";
     private static final String LOCAL_HOST_URL = "http://192.168.10.37:8080/lms/";
@@ -24,12 +25,10 @@ public class APIUrls {
     public static final String REJECT_TASK_URL = BASE_URL + "reject";
     public static final String FILE_DOWNLOAD = BASE_URL + "file/download";
     public static final String GET_EMPLOYEES = BASE_URL + "employee/getEmployees";
-
-
-
-
-
-
+    public static final String GET_EMPLOYEES_FOR_TEAM = BASE_URL + "employee/getEmployeesForTeam";
+    public static final String GET_HOLIDAY_LIST = BASE_URL + "holidaysList";
+    public static final String CHANGE_PASSWORD = BASE_URL + "changepassword";
+    public static final String GET_TEAMS = BASE_URL + "employee/getTeams";
 
 
 }

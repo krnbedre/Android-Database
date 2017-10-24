@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/list_item_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:padding="24dp"
+        android:text="SAmple text"
+        android:textSize="14dp">
+
+    </TextView>
+
+    <ImageButton
+        android:id="@+id/list_context_button"
+        android:layout_width="82dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="0dp"
+        android:layout_weight="0.3"
+        android:background="@null"
+        android:padding="0dp"
+        android:scaleType="center"
+        android:src="@drawable/user_icon_disp" />
+
+    <!--<Button-->
+    <!--android:id="@+id/list_context_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginRight="24dp"-->
+    <!--android:layout_weight="0.3"-->
+    <!--android:background="@drawable/ic_more_vert_black_24dp"-->
+    <!--android:backgroundTint="@color/colorPrimaryDark"/>-->
+
+
+    <!--<Button-->
+    <!--android:id="@+id/list_context_button"-->
+    <!--android:layout_width="42dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginRight="24dp"-->
+    <!--android:layout_weight="0.3"-->
+    <!--android:background="@drawable/ic_more_vert_black_24dp"-->
+    <!--android:backgroundTint="@color/colorPrimaryDark"/>-->
+
+</LinearLayout>

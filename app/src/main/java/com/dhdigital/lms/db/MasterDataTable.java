@@ -14,7 +14,6 @@ import com.dhdigital.lms.modal.TravelReason;
 import com.kelltontech.volley.application.BaseApplication;
 import com.kelltontech.volley.database.GenericDB;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,32 +28,22 @@ public class MasterDataTable {
 
 
     //public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY, m_id INTEGER, code TEXT, name TEXT, type TEXT)";
-
-
+    public static final String CREATE_USER_DATA = "CREATE TABLE " + USER_INFO_TABLE + " (username TEXT, tenantName TEXT, status INTEGER)";
     //NEW TABLES
     private final static String TABLE_NAME = MasterDataTable.class.getSimpleName();
     private final static String LEAVE_ENTITLEMENT_TABLE = "leave_entitlement";
-    private final static String LEAVE_TYPE_TABLE = "leave_type";
-    private final static String LEAVE_REASON_TABLE = "leave_reason";
-    private final static String TEAM_TABLE = "team";
-    private final static String HOLIDAY_TABLE = "holidays";
-    private final static String REJECT_REASON_TABLE = "reject_reason";
-
-
     //public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY, m_id INTEGER, code TEXT, name TEXT, type TEXT)";
-    public static final String CREATE_LEAVE_ENTITLEMENT_TABLE = "CREATE TABLE " + LEAVE_ENTITLEMENT_TABLE + " (m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT , count INTEGER, leave_type_id INTEGER , startDate INTEGER , endDate INTEGER)";
+    public static final String CREATE_LEAVE_ENTITLEMENT_TABLE = "CREATE TABLE " + LEAVE_ENTITLEMENT_TABLE + " (m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT , count REAL, leave_type_id INTEGER , startDate INTEGER , endDate INTEGER)";
+    private final static String LEAVE_TYPE_TABLE = "leave_type";
     public static final String CREATE_LEAVE_TYPE = "CREATE TABLE " + LEAVE_TYPE_TABLE + " (m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT , leave_type TEXT)";
+    private final static String LEAVE_REASON_TABLE = "leave_reason";
     public static final String CREATE_LEAVE_REASON = "CREATE TABLE " + LEAVE_REASON_TABLE + "(m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT )";
+    private final static String TEAM_TABLE = "team";
     public static final String CREATE_TEAM_TABLE = "CREATE TABLE " + TEAM_TABLE + "(m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT )";
+    private final static String HOLIDAY_TABLE = "holidays";
     public static final String CREATE_HOLIDAY_TABLE = "CREATE TABLE " + HOLIDAY_TABLE + " (m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT, holiday_date INTEGER )";
+    private final static String REJECT_REASON_TABLE = "reject_reason";
     public static final String CREATE_REJECT_TABLE = "CREATE TABLE " + REJECT_REASON_TABLE + "(m_id INTEGER PRIMARY KEY, code TEXT, name TEXT, type TEXT )";
-
-
-
-
-
-
-    public static final String CREATE_USER_DATA = "CREATE TABLE " + USER_INFO_TABLE + " (username TEXT, tenantName TEXT, status INTEGER)";
     private static MasterDataTable _instance;
     private GenericDB genericDB;
     private List<CityMasterData> dataList = new ArrayList<>();
@@ -389,7 +378,7 @@ public class MasterDataTable {
         data.setId(cursor.getInt(cursor.getColumnIndex("m_id")));
         data.setCode(cursor.getString(cursor.getColumnIndex("code")));
         data.setName(cursor.getString(cursor.getColumnIndex("name")));
-        data.setCount(cursor.getInt(cursor.getColumnIndex("count")));
+        data.setCount(cursor.getDouble(cursor.getColumnIndex("count")));
         data.setStartDate(cursor.getLong(cursor.getColumnIndex("startDate")));
         data.setEndDate(cursor.getLong(cursor.getColumnIndex("endDate")));
         //data.setLeaveType(cursor.getString(cursor.getColumnIndex("has_guest_house")));

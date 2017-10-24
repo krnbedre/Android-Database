@@ -33,6 +33,18 @@
         <meta-data
             android:name="DB_VERSION"
             android:value="1" />
+
+        <service android:name=".gcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".gcm.FirebaseIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity android:name=".activities.LoginActivity" android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
 
@@ -62,6 +74,14 @@
 
             </activity>
         <activity android:name=".activities.ApproverTasksActivity" />
+        <activity
+            android:name=".fragments.MyLeavesFilterDialog"
+            android:theme="@style/floating_screen_dialog"></activity>
+        <activity android:name=".activities.HolidayListActivity" />
+        <activity android:name=".activities.MyLeaveBalanceActivity" />
+        <activity android:name=".activities.UserProfileActivity" />
+        <activity android:name=".activities.ChangePasswordActivity" />
+        <activity android:name=".activities.EmployeeLookUpPage" />
     </application>
 
 </manifest>

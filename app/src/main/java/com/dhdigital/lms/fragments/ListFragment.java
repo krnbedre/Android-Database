@@ -15,10 +15,10 @@ import com.dhdigital.lms.activities.LeaveDetailsActivity;
 import com.dhdigital.lms.adapters.MyLeavesRecyclerAdapter;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.LeaveModal;
+import com.dhdigital.lms.util.AppConstants;
 import com.dhdigital.lms.util.RecyclerItemClickListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by admin on 06/10/17.
@@ -26,11 +26,10 @@ import java.util.List;
 
 public class ListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener {
 
+    private static RecyclerView recyclerView;
     private View view;
     private String title;
     private ArrayList<LeaveModal> leavesList = new ArrayList<>();
-
-    private static RecyclerView recyclerView;
 
     public ListFragment() {
     }
@@ -64,6 +63,7 @@ public class ListFragment extends Fragment implements RecyclerItemClickListener.
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),this));
 
 
+
     }
 
     @Override
@@ -72,6 +72,7 @@ public class ListFragment extends Fragment implements RecyclerItemClickListener.
         if (null != leaveModal) {
             GlobalData.gLeaveModal = leaveModal;
             Intent intent = new Intent(getActivity(), LeaveDetailsActivity.class);
+            intent.putExtra(AppConstants.NAVIGATION, AppConstants.REQUESTOR);
             startActivity(intent);
         }
     }

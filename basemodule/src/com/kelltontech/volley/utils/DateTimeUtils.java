@@ -202,6 +202,8 @@ public class DateTimeUtils {
         String DD_Mmmm_YYYY_HH_MM = "dd MMM yyy kk:mm";
         String DD_MMM = "dd MMM";
         String M_SS = "m:ss";
+        String ONLY_DATE = "dd";
+        String ONLY_MONTH = "MMM";
         String TENANT_LONG_DATE_FORMAT = "DD-MM-YYYY HH:mm:ss";
         String TENANT_SHORT_DATE_FORMAT = "MM-DD-YYYY";
         String SUMMARY_DISPLAY_DATE_TIME = "MMM dd, yyyy '\n' hh:mm a";

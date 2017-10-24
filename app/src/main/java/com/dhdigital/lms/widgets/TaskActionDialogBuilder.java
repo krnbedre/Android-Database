@@ -131,7 +131,7 @@ public class TaskActionDialogBuilder {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                theButton.setTextColor(context.getColor(R.color.greenBulb));
+                theButton.setTextColor(context.getResources().getColor(R.color.greenBulb));
                 theButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

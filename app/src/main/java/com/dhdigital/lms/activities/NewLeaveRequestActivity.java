@@ -27,9 +27,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.adapters.CustomAlertAdapter;
 import com.dhdigital.lms.db.MasterDataTable;
+import com.dhdigital.lms.modal.FailResponse;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Holiday;
 import com.dhdigital.lms.modal.Leave;
@@ -212,13 +214,14 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
         LeaveEntitlement entitlement = MasterDataTable.getInstance(mContext).getLeaveEntitlement(mSelectedLeaveType.getId());
 
-        mLeaveBalanceText.setText(mSelectedLeaveType.getBalance()+"/"+entitlement.getCount());
+        mLeaveBalanceText.setText(mSelectedLeaveType.getBalance() + "/" + entitlement.getCount() + " Days");
     }
 
 
     @Override
     public void updateUi(boolean status, int actionID, Object serviceResponse) {
 
+        removeProgressDialog();
         switch (actionID) {
             case NetworkEvents.SUBMIT_LEAVE_REQUEST:
                 if (status && serviceResponse instanceof Leave) {
@@ -234,7 +237,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                     }, 1000);
 
                 } else {
-                    AppUtil.showSnackBar(findViewById(R.id.button_save), "Failed to Apply Leave,Please try again", Color.parseColor("#A52A2A"));
+                    handleErrorMsgs(serviceResponse);
                 }
                 break;
             case NetworkEvents.MY_LEAVES_BALANCE:
@@ -249,16 +252,31 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                                         0);
                         updateLeaveBalanceCount();
                     }
+                } else {
+                    handleErrorMsgs(serviceResponse);
                 }
                 break;
             case NetworkEvents.CALCULATE_NO_DAYS:
-                if (status && serviceResponse instanceof Integer) {
-                    int noOfDays = (int) serviceResponse;
-                    updateAppliedLeaveDays(noOfDays);
+                if (status && serviceResponse instanceof List<?>) {
+                    List<String> noOfDays = (List<String>) serviceResponse;
+                    updateAppliedLeaveDays(noOfDays.size());
+                } else {
+                    handleErrorMsgs(serviceResponse);
+
                 }
         }
     }
 
+
+    private void handleErrorMsgs(Object serviceResponse) {
+
+        if (serviceResponse instanceof FailResponse) {
+            FailResponse res = (FailResponse) serviceResponse;
+            AppUtil.showSnackBar(findViewById(R.id.button_save), res.getMessage(), Color.parseColor("#A52A2A"));
+        }
+
+
+    }
 
     @Override
     public void onEvent(int eventId, Object eventData) {
@@ -349,6 +367,8 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                         mSelectedStartDate = selectedCal.getTimeInMillis();
                         startDateCalendar = selectedCal;
                         beginDateCalendar = selectedCal;
+                        mSelectedEndDate = 0;
+                        mToDateText.setText("");
                         mFromDateContainer.setBackground(getResources().getDrawable(R.drawable.card_style,null));
                         mFromDateText.setText(DateTimeUtils.getFormattedDate(mSelectedStartDate, DateTimeUtils.Format.DD_Mmmm_YYYY));
                     }
@@ -399,22 +419,39 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         //Disable sundays and Saturdays
         Calendar sunday = minDateCal;
         Calendar saturday = minDateCal;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String a = sdf.format(new Date(minDateCal.getTimeInMillis()));
+        Log.d("START WEEKEND DATE", "TimeStamp: " + minDateCal.getTimeInMillis() + "Date: " + a);
         List<Calendar> weekends = new ArrayList<>();
         int weeks = 53;
 
         for (int i = 0; i < (weeks * 7) ; i = i + 7) {
 
             sunday = Calendar.getInstance();
-            sunday.set(minDateCal.get(Calendar.YEAR)-1,11,31);
+            sunday.set(minDateCal.get(Calendar.YEAR), minDateCal.get(Calendar.MONTH), minDateCal.get(Calendar.DAY_OF_MONTH));
             sunday.add(Calendar.DAY_OF_YEAR, (Calendar.SUNDAY - sunday.get(Calendar.DAY_OF_WEEK) + 7 + i));
             saturday = Calendar.getInstance();
-            saturday.set(minDateCal.get(Calendar.YEAR)-1,11,31);
+            saturday.set(minDateCal.get(Calendar.YEAR), minDateCal.get(Calendar.MONTH), minDateCal.get(Calendar.DAY_OF_MONTH));
             saturday.add(Calendar.DAY_OF_YEAR, (Calendar.SATURDAY - saturday.get(Calendar.DAY_OF_WEEK) + i));
             weekends.add(saturday);
             weekends.add(sunday);
         }
         Calendar[] disabledDays = weekends.toArray(new Calendar[weekends.size()]);
         datePickerDialog.setDisabledDays(disabledDays);
+        printDates(disabledDays);
+
+    }
+
+
+    private void printDates(Calendar[] disabledDays) {
+
+        for (int i = 0; i < disabledDays.length; i++) {
+            long holidayDate = disabledDays[i].getTimeInMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String a = sdf.format(new Date(holidayDate));
+            Log.d("WEEKENDS", "TimeStamp: " + holidayDate + "Date: " + a);
+        }
+
     }
 
 
@@ -512,9 +549,9 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
 
 
-    private void calculateNoOfDays() {
+    /*private void calculateNoOfDays() {
 
-        mAppliedLeavesDaysContainer.setVisibility(View.VISIBLE);
+        //mAppliedLeavesDaysContainer.setVisibility(View.VISIBLE);
 
         Calendar startingDate = beginDateCalendar;
 
@@ -535,11 +572,11 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
         Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startDateCalendar, DateTimeUtils.Format.DD_MM_YYYY));
 
-        Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+        //Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
         Log.d("TAG","End Dates :"+DateTimeUtils.getFormattedDate(endDateCalendar, DateTimeUtils.Format.DD_MM_YYYY));
 
 
-        while(startingDate.get(Calendar.DATE) <= endDateCalendar.get(Calendar.DATE)) {
+        while(startingDate.getTimeInMillis() <= endDateCalendar.getTimeInMillis()) {
 
             Calendar holiday = Calendar.getInstance();
             holiday.setTimeInMillis(startingDate.getTimeInMillis());
@@ -558,8 +595,11 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                         Log.d("FILTERED", "Removing Holiday :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
 
                     } else {
-                        leaveAppliedDays.add(DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
-                        Log.d("FILTERED", "Dates :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+                        if (!leaveAppliedDays.contains(DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY))) {
+                            leaveAppliedDays.add(DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+                            Log.d("ADDED", "Dates :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
+                        }
+
 
                     }
                     //  Log.d("TAG", "Dates :" + DateTimeUtils.getFormattedDate(startingDate, DateTimeUtils.Format.DD_MM_YYYY));
@@ -568,16 +608,18 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
             startingDate.add(Calendar.DATE,1);
 
         }
-        if (leaveAppliedDays.size() == 1) {
+        *//*if (leaveAppliedDays.size() == 1) {
             mTotalDaystext.setText("1 DAY");
         } else {
             mTotalDaystext.setText(leaveAppliedDays.size()+" DAYS");
-        }
+        }*//*
 
+
+        Log.d("APPLIED LEAVES DAYS :", ""+leaveAppliedDays.size());
         Log.d("TAG","Start Dates :"+DateTimeUtils.getFormattedDate(startDateCalendar, DateTimeUtils.Format.DD_MM_YYYY));
 
 
-    }
+    }*/
 
 
     public void showAlertDialog(int type, boolean searchBox) {
@@ -727,6 +769,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
     /** API used for submit action */
     public void submitLeaveRequest() {
 
+        showProgressDialog("Submitting your leave...");
         Type type = new TypeToken<Leave>() {
         }.getType();
 
@@ -759,6 +802,10 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
                 updateUi(true,NetworkEvents.SUBMIT_LEAVE_REQUEST,response);
             }
 
+            @Override
+            protected VolleyError parseNetworkError(VolleyError volleyError) {
+                return super.parseNetworkError(volleyError);
+            }
         },AppConstants.REQUEST_TIMEOUT_AVG);
     }
 
@@ -782,7 +829,8 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
     public void getAppliedLeaveDays(long startDate,long endDate) {
 
-        Type type = new TypeToken<Integer>() {
+        showProgressDialog("Calculating number of days");
+        Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
 
         Log.d("TAG","START DATE : "+startDate);
@@ -792,10 +840,10 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         Log.d("TAG","END DATE WITH TIME:"+endDate*1000);
 
 
-        RequestManager.addRequest(new GsonObjectRequest<Integer>(APIUrls.CALCULATE_LEAVE_DAYS+"?startDate="+startDate+"&endDate="+endDate,null,type,new VolleyErrorListener(this,this,NetworkEvents.CALCULATE_NO_DAYS)) {
+        RequestManager.addRequest(new GsonObjectRequest<List>(APIUrls.CALCULATE_LEAVE_DAYS + "?startDate=" + startDate + "&endDate=" + endDate, null, type, new VolleyErrorListener(this, this, NetworkEvents.CALCULATE_NO_DAYS)) {
 
             @Override
-            public void deliverResponse(Integer response, Map<String, String> responseHeaders) {
+            public void deliverResponse(List response, Map<String, String> responseHeaders) {
 
                 updateUi(true,NetworkEvents.CALCULATE_NO_DAYS,response);
             }

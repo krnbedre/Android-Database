@@ -7,18 +7,55 @@
     android:orientation="horizontal"
     android:weightSum="1">
 
-    <TextView
-        android:id="@+id/list_item_textview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.7"
-        android:gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeight"
-        android:padding="24dp"
-        android:text="SAmple text"
-        android:textSize="14dp">
+        android:layout_gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/ten_dp"
+        android:weightSum="3">
 
-    </TextView>
+        <ImageView
+            android:id="@+id/userDispIcon"
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:src="@drawable/user_icon_disp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:fontFamily="@string/font1"
+                android:text="@string/app_name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_userId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:fontFamily="@string/font1"
+                android:text="@string/app_name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14dp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_grey_4"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_toolbar"
+        layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:layout_margin="5dp"
+        android:background="@drawable/card_style"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6sp"
+            android:gravity="center_vertical"
+            android:padding="5sp"
+            android:text="Team"
+            android:textAllCaps="true"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/employee_spn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6sp"
+            android:background="@color/white"
+            android:padding="5sp">
+
+        </android.support.v7.widget.AppCompatSpinner>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/text_color_primary"
+        android:descendantFocusability="beforeDescendants"
+        android:elevation="4sp"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/city_search_box"
+            layout="@layout/element_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="#f4f4f4"
+        android:elevation="3sp"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="0.9"
+            android:background="@color/white"
+            android:elevation="2sp"
+            android:fadingEdgeLength="10dp"></ListView>
+
+    </LinearLayout>
+</LinearLayout>

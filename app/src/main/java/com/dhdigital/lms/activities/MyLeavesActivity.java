@@ -3,8 +3,6 @@ package com.dhdigital.lms.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -12,26 +10,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.adapters.MyLeavesAdapter;
 import com.dhdigital.lms.modal.GlobalData;
-import com.dhdigital.lms.modal.Leave;
 import com.dhdigital.lms.modal.LeaveModal;
 import com.dhdigital.lms.modal.MyleavesResponse;
-import com.dhdigital.lms.modal.TaskActionRequest;
-import com.dhdigital.lms.modal.TaskRejectRequest;
 import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
-import com.dhdigital.lms.util.PreferenceUtil;
-import com.dhdigital.lms.widgets.TaskActionDialogBuilder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import com.kelltontech.volley.ext.GsonObjectRequest;
 import com.kelltontech.volley.ext.RequestManager;
 import com.kelltontech.volley.ui.activity.BaseActivity;
@@ -105,6 +94,7 @@ public class MyLeavesActivity extends BaseActivity {
                     LeaveModal leaveModal = (LeaveModal) parent.getItemAtPosition(position);
                     GlobalData.gLeaveModal = leaveModal;
                     Intent intent = new Intent(getApplicationContext(), LeaveDetailsActivity.class);
+                    intent.putExtra(AppConstants.NAVIGATION, AppConstants.REQUESTOR);
                     startActivity(intent);
                 }
             }
@@ -124,16 +114,6 @@ public class MyLeavesActivity extends BaseActivity {
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void updateUi(boolean status, int actionID, Object serviceResponse) {
@@ -180,7 +160,7 @@ public class MyLeavesActivity extends BaseActivity {
         Type listType = new TypeToken<MyleavesResponse>() {
         }.getType();
 
-        String url = APIUrls.MY_LEAVES + "?p=" + mTRPageIndex + "&size=10";
+        String url = APIUrls.MY_LEAVES + "?p=" + mTRPageIndex + "&size=30";
 
 
         RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesActivity.this), null, listType, new VolleyErrorListener(MyLeavesActivity.this, MyLeavesActivity.this, event)) {
@@ -190,8 +170,6 @@ public class MyLeavesActivity extends BaseActivity {
             }
         }, AppConstants.REQUEST_TIMEOUT_AVG);
     }
-
-
 
 
 }

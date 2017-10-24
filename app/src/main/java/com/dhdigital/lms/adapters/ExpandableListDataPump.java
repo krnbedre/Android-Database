@@ -20,7 +20,7 @@ public class ExpandableListDataPump {
         List<String> leavesList = new ArrayList<String>();
 
         List<String> inbox = new ArrayList<String>();
-        inbox.add(AppConstants.PERSONAL_TASK);
+        inbox.add(AppConstants.APPROVE_LEAVE);
      /*   if( null != GlobalData.gLoggedInUser) {
             List<Authority> authorityList = GlobalData.gLoggedInUser.getAuthorities();
             for (int iterator = 0; iterator < authorityList.size(); iterator++) {
@@ -43,9 +43,9 @@ public class ExpandableListDataPump {
         // logout.add(AppConstants.LOG_OUT);
 
 
-        expandableListDetail.put(AppConstants.NEW_LEAVE_REQUEST, leavesList);
+        expandableListDetail.put(AppConstants.APPLY_LEAVE, leavesList);
         expandableListDetail.put(AppConstants.MY_LEAVES, leavesList);
-        expandableListDetail.put(AppConstants.PERSONAL_TASK, leavesList);
+        expandableListDetail.put(AppConstants.APPROVE_LEAVE, leavesList);
         expandableListDetail.put(AppConstants.CALENDAR, leavesList);
         expandableListDetail.put(AppConstants.LOG_OUT, logout);
         return expandableListDetail;

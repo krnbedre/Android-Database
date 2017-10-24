@@ -17,6 +17,19 @@
         android:textColor="@color/text_color_primary"
         android:textStyle="bold" />
 
+
+    <TextView
+        android:id="@+id/chart_empty_title"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:padding="4sp"
+        android:text="No Leaves Applied"
+        android:textAlignment="center"
+        android:textColor="@color/text_color_primary"
+        android:textSize="16sp"
+        android:textStyle="normal" />
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart1"
         android:layout_width="match_parent"
@@ -30,6 +43,148 @@
         android:layout_width="match_parent"
         android:layout_height="350sp"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/month_details_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6sp"
+        android:background="@drawable/card_style"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/selected_month_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:layout_marginTop="4sp"
+            android:background="@drawable/card_style_gray"
+            android:padding="6sp"
+            android:text="Month"
+            android:textAlignment="center"
+            android:textColor="@color/text_color_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:orientation="horizontal"
+            android:weightSum="2.5">
+
+            <TextView
+                android:id="@+id/approved_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:padding="4sp"
+                android:text="@string/approved_title"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/approved_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4sp"
+                android:text="0"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:orientation="horizontal"
+            android:weightSum="2.5">
+
+            <TextView
+                android:id="@+id/rejected_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:padding="4sp"
+                android:text="@string/rejected_title"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/rejected_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4sp"
+                android:text="0"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:orientation="horizontal"
+            android:weightSum="2.5">
+
+            <TextView
+                android:id="@+id/pending_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:padding="4sp"
+                android:text="@string/pending_title"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/pending_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4sp"
+                android:text="0"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:orientation="horizontal"
+            android:weightSum="2.5">
+
+            <TextView
+                android:id="@+id/cancelled_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:padding="4sp"
+                android:text="@string/cancelled_title"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cancelled_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4sp"
+                android:text="0"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

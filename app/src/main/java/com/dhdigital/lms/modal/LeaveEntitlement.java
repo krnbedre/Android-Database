@@ -24,7 +24,7 @@ public class LeaveEntitlement implements Parcelable{
     private String code;
     private String name;
     private LeaveType leaveType;
-    private int count = 0;
+    private Double count = 0.0;
     private long validFrom;
     private long validTo;
 
@@ -37,7 +37,7 @@ public class LeaveEntitlement implements Parcelable{
         code = in.readString();
         name = in.readString();
         leaveType = in.readParcelable(LeaveType.class.getClassLoader());
-        count = in.readInt();
+        count = in.readDouble();
         validFrom = in.readLong();
         validTo = in.readLong();
 
@@ -75,11 +75,11 @@ public class LeaveEntitlement implements Parcelable{
         this.leaveType = leaveType;
     }
 
-    public int getCount() {
+    public Double getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Double count) {
         this.count = count;
     }
 
@@ -93,7 +93,7 @@ public class LeaveEntitlement implements Parcelable{
         dest.writeInt(id);
         dest.writeString(code);
         dest.writeString(name);
-        dest.writeInt(count);
+        dest.writeDouble(count);
         dest.writeLong(validFrom);
         dest.writeLong(validTo);
         dest.writeParcelable(leaveType, flags);

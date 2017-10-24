@@ -1,34 +1,24 @@
 package com.dhdigital.lms.activities;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.db.MasterDataTable;
-import com.dhdigital.lms.gcm.DHGcmRegistrationService;
+import com.dhdigital.lms.gcm.MyFirebaseMessagingService;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Users;
 import com.dhdigital.lms.net.APIUrls;
@@ -39,14 +29,12 @@ import com.dhdigital.lms.util.AppConstants;
 import com.dhdigital.lms.util.AppUtil;
 import com.dhdigital.lms.util.PreferenceUtil;
 import com.google.gson.reflect.TypeToken;
-import com.kelltontech.volley.ui.activity.BaseActivity;
 import com.kelltontech.volley.ext.GsonObjectRequest;
 import com.kelltontech.volley.ext.RequestManager;
+import com.kelltontech.volley.ui.activity.BaseActivity;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
 * This class is used for displaying user with Login page
@@ -121,7 +109,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void registerGCMServices() {
-        Intent gcmRegistrationIntent = new Intent(mContext, DHGcmRegistrationService.class);
+        Intent gcmRegistrationIntent = new Intent(mContext, MyFirebaseMessagingService.class);
         startService(gcmRegistrationIntent);
     }
 

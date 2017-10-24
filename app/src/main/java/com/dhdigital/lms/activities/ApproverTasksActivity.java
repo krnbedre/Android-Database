@@ -25,7 +25,6 @@ import com.dhdigital.lms.modal.MasterData;
 import com.dhdigital.lms.modal.MyleavesResponse;
 import com.dhdigital.lms.modal.TaskActionRequest;
 import com.dhdigital.lms.modal.TaskFilterParams;
-import com.dhdigital.lms.modal.TaskRejectRequest;
 import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
@@ -63,10 +62,10 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
     private List<LeaveModal> mLeavesList = new ArrayList<LeaveModal>();
     private TextView emptyView;
     private TaskActionRequest taskActionRequest;
-    //TravelRequest trObj;
-    private TaskRejectRequest taskactionRejectRequest = new TaskRejectRequest();
+
     private ArrayList<Employee> employeeList = new ArrayList<>();
     private ArrayList<MasterData> teamList = new ArrayList<>();
+    private String mTeamId, mEmployeeId = null;
 
 
     @Override
@@ -78,8 +77,8 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
         emptyView = (TextView) findViewById(R.id.empty);
         mLeavesAdapter = new MyLeavesAdapter(this,mLeavesList, NetworkEvents.GET_MY_TAKS);
         mListView.setAdapter(mLeavesAdapter);
-        emptyView.setText("No Tasks found");
-
+        emptyView.setText(getString(R.string.no_tasks));
+        getEmployeesUnderLoggedInUser();
 
         executeMyLeavesAPI(NetworkEvents.GET_MY_TAKS,true);
 
@@ -136,6 +135,27 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
                         MyleavesResponse response = (MyleavesResponse) serviceResponse;
                         if (response.getContent() != null) {
                             //mListTravelRequest.clear();
+                            if (response.getContent().size() == 0) {
+                                emptyView.setVisibility(View.VISIBLE);
+                            } else {
+                                totalElements = response.getTotalElements();
+                                mTRPageIndex++;
+                                mLeavesList.addAll(response.getContent());
+                                mLeavesAdapter.notifyDataSetChanged();
+                                emptyView.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }
+                }
+                isRefreshingList = false;
+                break;
+            case NetworkEvents.GET_MY_FILTERED_TASKS:
+                if (status) {
+                    if (serviceResponse instanceof MyleavesResponse) {
+                        MyleavesResponse response = (MyleavesResponse) serviceResponse;
+                        if (response.getContent() != null) {
+                            mLeavesList.clear();
                             totalElements = response.getTotalElements();
                             mTRPageIndex++;
                             mLeavesList.addAll(response.getContent());
@@ -190,6 +210,16 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
                     }
                 }
                 break;
+            case NetworkEvents.GET_EMPLOYEES:
+                removeProgressDialog();
+                if (status && serviceResponse instanceof List<?>) {
+                    //mDashBoardData = (DashBoardModal) serviceResponse;
+
+                    employeeList = (ArrayList<Employee>) serviceResponse;
+
+                    //updateLeaveBalanceCount();
+                }
+                break;
         }
     }
 
@@ -218,13 +248,15 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
 //http://192.168.10.37:8080/lms/approve?leaveId=44&comments="spring TuTiTu"
 
         TaskFilterParams params = new TaskFilterParams();
-        Gson gson = new GsonBuilder().serializeNulls().create();
+        Gson gson = new GsonBuilder().create();
+        params.setTeamId(mTeamId);
+        params.setEmpId(mEmployeeId);
         String requestPayload = gson.toJson(params);
 
 
         Log.d("PAYLOAD",requestPayload);
 
-        String url = APIUrls.APPROVER_TASKS + "?p=" + mTRPageIndex + "&size=10";
+        String url = APIUrls.APPROVER_TASKS + "?p=" + mTRPageIndex + "&size=30";
 
 
         RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(ApproverTasksActivity.this), requestPayload, listType, new VolleyErrorListener(ApproverTasksActivity.this, ApproverTasksActivity.this, event)) {
@@ -244,6 +276,7 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
             LeaveModal leaveModal = (LeaveModal) mLeavesList.get(position);
             GlobalData.gLeaveModal = leaveModal;
             Intent intent = new Intent(getApplicationContext(), LeaveDetailsActivity.class);
+            intent.putExtra(AppConstants.NAVIGATION, AppConstants.APPROVER);
             startActivity(intent);
         }
 
@@ -370,15 +403,37 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
     }
 
     private void onFilterClicked() {
-        FilterDialog dialog = new FilterDialog(this, employeeList, teamList, this);
+        FilterDialog dialog = new FilterDialog(this, this, this);
         dialog.show();
-
     }
 
 
     @Override
     public void onFilterApplied(String userId, String teamId) {
 
-        executeMyLeavesAPI(NetworkEvents.GET_MY_TAKS, true);
+        mTeamId = teamId;
+        mEmployeeId = userId;
+        executeMyLeavesAPI(NetworkEvents.GET_MY_FILTERED_TASKS, true);
+    }
+
+    private void getEmployeesUnderLoggedInUser() {
+
+        showProgressDialog(getString(R.string.loading));
+        Type type = new TypeToken<ArrayList<Employee>>() {
+        }.getType();
+
+
+        Log.d("URL", APIUrls.GET_EMPLOYEES);
+
+        RequestManager.addRequest(new GsonObjectRequest<List>(APIUrls.GET_EMPLOYEES, null, type, new VolleyErrorListener(this, this, NetworkEvents.GET_EMPLOYEES)) {
+
+            @Override
+            public void deliverResponse(List response, Map<String, String> responseHeaders) {
+
+                updateUi(true, NetworkEvents.GET_EMPLOYEES, response);
+            }
+
+        }, AppConstants.REQUEST_TIMEOUT_AVG);
+
     }
 }

@@ -3,10 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_margin="10dp"
     android:background="@drawable/card_style"
     android:elevation="4sp"
+    android:orientation="vertical"
     android:padding="2dp">
 
 
@@ -14,43 +14,44 @@
         android:id="@+id/status_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:layout_marginTop="3sp"
         android:layout_marginLeft="4sp"
         android:layout_marginRight="4sp"
+        android:layout_marginTop="3sp"
         android:background="@color/common_grey_3"
+        android:orientation="horizontal"
         android:padding="2dp"
 
-        android:orientation="horizontal">
+        android:weightSum="3">
 
             <TextView
                 android:id="@+id/leave_type_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_color_primary"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:textSize="14sp"
-                android:text="PRIVILAGE LEAVE"
-                android:padding="2sp"
                 android:layout_weight="1"
                 android:background="@color/common_grey_3"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:lines="2"
+                android:padding="2sp"
+                android:text="PRIVILAGE LEAVE"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TextView
 
+                android:id="@+id/total_leaves_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/common_grey_3"
-                android:id="@+id/total_leaves_label"
-                android:textColor="@color/greenBulb"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:textSize="14sp"
-                android:text="1 DAY"
-                android:padding="2sp"
                 android:gravity="center"
+                android:padding="2sp"
+                android:text="1 DAY"
+                android:textAllCaps="true"
+                android:textColor="@color/greenBulb"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 ></TextView>
 
         <LinearLayout
@@ -63,13 +64,13 @@
                 android:id="@+id/status_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:textSize="14sp"
-                android:text="13141"
-                android:padding="2sp"
                 android:gravity="center"
+                android:padding="2sp"
+                android:text="13141"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -84,21 +85,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="14sp"
-            android:textColor="@color/text_color_primary"
+            android:gravity="center"
             android:text="FROM"
+            android:textColor="@color/text_color_primary"
 
-            android:gravity="center"/>
+            android:textSize="14sp" />
         <TextView
             android:id="@+id/to_date_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="14sp"
-            android:textColor="@color/text_color_primary"
+            android:gravity="center"
             android:text="TO"
+            android:textColor="@color/text_color_primary"
 
-            android:gravity="center"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,21 +111,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
-            android:textColor="@color/text_color_primary"
+            android:gravity="center"
             android:text="18 Sep,2017"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:textColor="@color/text_color_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/to_date_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
-            android:textColor="@color/text_color_primary"
+            android:gravity="center"
             android:text="20 Sep,2017"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:textColor="@color/text_color_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 
@@ -143,27 +144,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="4sp"
-        android:padding="5sp"
+        android:layout_marginBottom="5sp"
         android:layout_marginLeft="10sp"
-        android:layout_marginBottom="5sp">
+        android:layout_marginTop="4sp"
+        android:orientation="vertical"
+        android:padding="5sp">
         <TextView
             android:id="@+id/leave_reason_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_color_primary"
             android:text="LEAVE REASON"
+            android:textColor="@color/text_color_primary"
+            android:textSize="14sp"
             android:textStyle="bold"
             />
         <TextView
             android:id="@+id/leave_reason_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/text_color_primary"
             android:text="Not well"
+            android:textColor="@color/text_color_primary"
+            android:textSize="14sp"
 
            />
     </LinearLayout>

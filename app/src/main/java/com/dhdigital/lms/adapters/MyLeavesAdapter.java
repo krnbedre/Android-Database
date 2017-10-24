@@ -8,41 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.LazyHeaders;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.activities.ApproverTasksActivity;
 import com.dhdigital.lms.glide.HeaderLoader;
-import com.dhdigital.lms.modal.FileUpload;
 import com.dhdigital.lms.modal.Files;
-import com.dhdigital.lms.modal.Leave;
 import com.dhdigital.lms.modal.LeaveModal;
 import com.dhdigital.lms.net.APIUrls;
-import com.dhdigital.lms.net.HeaderManager;
-import com.dhdigital.lms.util.AppUtil;
 import com.dhdigital.lms.util.CircleTransform;
-import com.dhdigital.lms.util.PreferenceUtil;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.kelltontech.volley.utils.DateTimeUtils;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
 
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by admin on 04/10/17.
@@ -96,7 +75,7 @@ public class MyLeavesAdapter extends ArrayAdapter<LeaveModal> {
         //Log.d("STR","ref no: "+ com.dhdigital.lms.modal.Leave.getReferenceNo());
 
         holder.leaveType.setText(null != leaveModal.getLeaveType() ? leaveModal.getLeaveType().getName(): "");
-        holder.no_of_days.setText(Double.toString(leaveModal.getCount()));
+        holder.no_of_days.setText(Double.toString(leaveModal.getCount()) + " Days");
 
 
         holder.userName.setText(leaveModal.getRequestedBy().getEmployee().getCompleteName());

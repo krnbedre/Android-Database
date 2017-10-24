@@ -1,20 +1,23 @@
 package com.dhdigital.lms.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.fragments.ListFragment;
+import com.dhdigital.lms.fragments.MyLeavesFilterDialog;
 import com.dhdigital.lms.modal.LeaveModal;
 import com.dhdigital.lms.modal.MasterData;
 import com.dhdigital.lms.modal.MyleavesResponse;
@@ -32,6 +35,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.dhdigital.lms.util.AppConstants.END_DATE_FILTER;
+import static com.dhdigital.lms.util.AppConstants.LEAVE_TYPE_FILTER;
+import static com.dhdigital.lms.util.AppConstants.MY_LEAVES_FILTER_INTENT;
+import static com.dhdigital.lms.util.AppConstants.START_DATE_FILTER;
+import static com.dhdigital.lms.util.AppConstants.STATUS_FILTER;
 
 /**
  * Created by admin on 06/10/17.
@@ -122,42 +131,6 @@ public class MyLeavesTabActivity extends BaseActivity {
         viewPager.setAdapter(adapter);
     }
 
-
-    //View Pager fragments setting adapter class
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();//fragment arraylist
-        private final List<String> mFragmentTitleList = new ArrayList<>();//title arraylist
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-
-        //adding fragments and title method
-        public void addFrag(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
-
-
-
-
     @Override
     public void updateUi(boolean status, int actionID, Object serviceResponse) {
 
@@ -191,7 +164,32 @@ public class MyLeavesTabActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.filter_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_search:
+                onFilterClicked();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void onFilterClicked() {
+
+        Intent filterActivity = new Intent(this, MyLeavesFilterDialog.class);
+        startActivityForResult(filterActivity, MY_LEAVES_FILTER_INTENT);
+    }
 
     private void categorizeList() {
 
@@ -200,7 +198,6 @@ public class MyLeavesTabActivity extends BaseActivity {
             LeaveModal leaveModalItem = mAllLeaves.get(i);
             if (null != leaveModalItem) {
                 MasterData status = leaveModalItem.getStatus();
-
 
 
                 switch (status.getName().toUpperCase()) {
@@ -237,7 +234,6 @@ public class MyLeavesTabActivity extends BaseActivity {
 
     }
 
-
     private void executeMyLeavesAPI(final int event,final boolean loadStart) {
         if (isRefreshingList) return;
         isRefreshingList = true;
@@ -251,8 +247,7 @@ public class MyLeavesTabActivity extends BaseActivity {
         }.getType();
 
 
-
-        String url = APIUrls.MY_LEAVES + "?p=" + mTRPageIndex + "&ps=10";
+        String url = APIUrls.MY_LEAVES + "?p=" + mTRPageIndex + "&ps=30";
 
 
         RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesTabActivity.this), null, listType, new VolleyErrorListener(MyLeavesTabActivity.this, MyLeavesTabActivity.this, event)) {
@@ -261,5 +256,77 @@ public class MyLeavesTabActivity extends BaseActivity {
                 updateUi(true, event, response);
             }
         }, AppConstants.REQUEST_TIMEOUT_AVG);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == MY_LEAVES_FILTER_INTENT) {
+
+            if (data != null) {
+                String leaveTypeId = data.getStringExtra(LEAVE_TYPE_FILTER);
+                String statusId = data.getStringExtra(STATUS_FILTER);
+                long startDate = data.getLongExtra(START_DATE_FILTER, 0);
+                long endDate = data.getLongExtra(END_DATE_FILTER, 0);
+                executeMyLeavesAPIWithFilter(NetworkEvents.MY_LEAVES_REQUEST, leaveTypeId, statusId, startDate, endDate);
+            }
+
+        }
+
+    }
+
+    private void executeMyLeavesAPIWithFilter(final int event, String leaveTypeId, String statusId, long startDate, long endDate) {
+        if (isRefreshingList) return;
+
+        isRefreshingList = true;
+        if (mTRPageIndex == 0) // showing the progress dialog only first time when Activity starts
+            showProgressDialog("Loading");
+        Type listType = new TypeToken<MyleavesResponse>() {
+        }.getType();
+
+        String url = APIUrls.MY_LEAVES + "?p=" + 0 + "&size=30" + "&leaveType=" + leaveTypeId + "&statusId=" + statusId;
+        //+"&startDate="+startDate+"&endDate="+endDate;
+
+
+        Log.d("URL", url);
+        RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesTabActivity.this), null, listType, new VolleyErrorListener(MyLeavesTabActivity.this, MyLeavesTabActivity.this, event)) {
+            @Override
+            public void deliverResponse(MyleavesResponse response, Map<String, String> responseHeaders) {
+                updateUi(true, event, response);
+            }
+        }, AppConstants.REQUEST_TIMEOUT_AVG);
+    }
+
+    //View Pager fragments setting adapter class
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();//fragment arraylist
+        private final List<String> mFragmentTitleList = new ArrayList<>();//title arraylist
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+
+        //adding fragments and title method
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 }

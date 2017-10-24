@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.modal.MonthWiseLeave;
+import com.dhdigital.lms.util.AppConstants;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -36,9 +38,12 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
     private View view;
     private PieChart mChart1, mChart2;
-    private TextView mChartTitle;
+    private TextView mChartTitle, mMonthSelectedTitle, mApprovedLeavesText, mRejectedLeavesText, mPendingLeavesText, mCancelledLeavesText;
+    private LinearLayout mMonthDetailsContainer;
 
     private List<MonthWiseLeave> monthWiseLeaveList = new ArrayList<>();
+
+    private String navigation = AppConstants.CUMULATIVE_LEAVE_CHART;
 
     public PieChartFragment() {
 
@@ -50,7 +55,16 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         super.onResume();
         this.monthWiseLeaveList = getArguments().getParcelableArrayList("MONTHWISE_LEAVES");
-        setDataToChart();
+        navigation = getArguments().getString(AppConstants.NAVIGATION, AppConstants.CUMULATIVE_LEAVE_CHART);
+        switch (navigation) {
+            case AppConstants.CUMULATIVE_LEAVE_CHART:
+                setDataToCumulativeChart();
+                break;
+            case AppConstants.MONTH_LEAVE_CHART:
+                setDataToChart();
+                break;
+        }
+
         mChart2.setVisibility(View.GONE);
     }
 
@@ -59,10 +73,22 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.piec_chart_layout, container, false);
         this.monthWiseLeaveList = getArguments().getParcelableArrayList("MONTHWISE_LEAVES");
+        initializeWidgets();
         initializeChart();
 
         return view;
 
+    }
+
+    private void initializeWidgets() {
+
+        mMonthSelectedTitle = (TextView) view.findViewById(R.id.selected_month_title);
+        mApprovedLeavesText = (TextView) view.findViewById(R.id.approved_value);
+        mRejectedLeavesText = (TextView) view.findViewById(R.id.rejected_value);
+        mCancelledLeavesText = (TextView) view.findViewById(R.id.cancelled_value);
+        mPendingLeavesText = (TextView) view.findViewById(R.id.pending_value);
+        mMonthDetailsContainer = (LinearLayout) view.findViewById(R.id.month_details_container);
+        mMonthDetailsContainer.setVisibility(View.GONE);
     }
 
     private void initializeChart() {
@@ -84,8 +110,8 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         //mChart.setCenterText(generateCenterSpannableText());
 
-        mChart1.setDrawHoleEnabled(false);
-        mChart2.setDrawHoleEnabled(true);
+        mChart1.setDrawHoleEnabled(true);
+        //mChart2.setDrawHoleEnabled(true);
         mChart1.setHoleColor(Color.WHITE);
         mChart2.setHoleColor(Color.WHITE);
 
@@ -128,28 +154,111 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
+
+        if (monthWiseLeaveList.size() == 0) {
+
+            view.findViewById(R.id.chart_empty_title).setVisibility(View.VISIBLE);
+            mChart1.setVisibility(View.GONE);
+        } else {
+
+            view.findViewById(R.id.chart_empty_title).setVisibility(View.GONE);
+            mChart1.setVisibility(View.VISIBLE);
+            // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+            // the chart.
+
+            for (int i = 0; i < monthWiseLeaveList.size(); i++) {
+                entries.add(new PieEntry(calculateLeavePercentagePerMonth(monthWiseLeaveList.get(i)),
+                        monthWiseLeaveList.get(i).getMonth(),
+                        getResources().getDrawable(R.drawable.calendar)));
+            }
+
+            PieDataSet dataSet = new PieDataSet(entries, "Month-wise Leaves Taken");
+
+            dataSet.setDrawIcons(false);
+            dataSet.setLabel("");
+
+            mChart1.setUsePercentValues(true);
+            dataSet.setSliceSpace(3f);
+            dataSet.setIconsOffset(new MPPointF(0, 40));
+            dataSet.setSelectionShift(5f);
+
+            // add a lot of colors
+
+            ArrayList<Integer> colors = new ArrayList<Integer>();
+
+
+            for (int c : createPalleteForMonths())
+                colors.add(c);
+
+
+            dataSet.setColors(colors);
+            //dataSet.setSelectionShift(0f);
+
+            PieData data = new PieData(dataSet);
+            data.setValueFormatter(new PercentFormatter());
+            data.setValueTextSize(11f);
+            data.setValueTextColor(Color.WHITE);
+            // data.setValueTypeface(mTfLight);
+            mChart1.setData(data);
+
+            // undo all highlights
+            mChart1.highlightValues(null);
+
+            mChart1.invalidate();
+            mChart2.invalidate();
+            onNothingSelected();
+
+        }
+
+    }
+
+
+    private void setDataToCumulativeChart() {
+
+        Float mult = calculateRange();
+
+        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
+
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
+
+        float approved_leaves = 0.0f;
+        float rejected_leaves = 0.0f;
+        float pending_leaves = 0.0f;
+        float cancelled_leaves = 0.0f;
         for (int i = 0; i < monthWiseLeaveList.size() ; i++) {
-            entries.add(new PieEntry(calculateLeavePercentagePerMonth(monthWiseLeaveList.get(i)),
-                    monthWiseLeaveList.get(i).getMonth(),
-                    getResources().getDrawable(R.drawable.calendar)));
+            approved_leaves = approved_leaves + monthWiseLeaveList.get(i).getApproved();
+            rejected_leaves = rejected_leaves + monthWiseLeaveList.get(i).getRejected();
+            pending_leaves = pending_leaves + monthWiseLeaveList.get(i).getPending();
+            cancelled_leaves = cancelled_leaves + monthWiseLeaveList.get(i).getCancelled();
         }
+
+        entries.add(new PieEntry(approved_leaves,
+                AppConstants.APPROVED,
+                getResources().getDrawable(R.drawable.calendar)));
+        entries.add(new PieEntry(rejected_leaves,
+                AppConstants.REJECTED,
+                getResources().getDrawable(R.drawable.calendar)));
+        entries.add(new PieEntry(pending_leaves,
+                AppConstants.PENDING,
+                getResources().getDrawable(R.drawable.calendar)));
+        entries.add(new PieEntry(cancelled_leaves,
+                AppConstants.CANCELLED,
+                getResources().getDrawable(R.drawable.calendar)));
 
         if (monthWiseLeaveList.size() == 0) {
             mChart1.setNoDataText("No leaves taken");
-            mChart1.setNoDataTextColor(getActivity().getColor(R.color.text_color_primary));
+            //mChart1.setNoDataTextColor(getActivity().getColor(R.color.text_color_primary));
             MonthWiseLeave parcelValues = new MonthWiseLeave();
             parcelValues.setMonth(null);
 
-            setDataToChart2(parcelValues);
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "Month-wise Leaves Taken");
 
         dataSet.setDrawIcons(false);
         dataSet.setLabel("");
-
+        mChart1.setUsePercentValues(false);
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(5f);
@@ -159,7 +268,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
 
-        for (int c : ColorTemplate.MATERIAL_COLORS)
+        for (int c : createPalleteForMonths())
             colors.add(c);
 
 
@@ -167,10 +276,9 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         //dataSet.setSelectionShift(0f);
 
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
-       // data.setValueTypeface(mTfLight);
+        // data.setValueTypeface(mTfLight);
         mChart1.setData(data);
 
         // undo all highlights
@@ -200,20 +308,37 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
-        //PieEntry entry = (PieEntry) e.getData();
-
-        for (int i = 0; i < monthWiseLeaveList.size(); i++) {
-            if (monthWiseLeaveList.get(i).getMonth().equalsIgnoreCase(((PieEntry) e).getLabel())) {
-                setDataToChart2(monthWiseLeaveList.get(i));
-            }
+        switch (navigation) {
+            case AppConstants.CUMULATIVE_LEAVE_CHART:
+                break;
+            case AppConstants.MONTH_LEAVE_CHART:
+                for (int i = 0; i < monthWiseLeaveList.size(); i++) {
+                    if (monthWiseLeaveList.get(i).getMonth().equalsIgnoreCase(((PieEntry) e).getLabel())) {
+                        setMonthData(monthWiseLeaveList.get(i));
+                    }
+                }
+                break;
         }
+
+
+    }
+
+
+    private void setMonthData(MonthWiseLeave monthWiseLeave) {
+
+        mMonthSelectedTitle.setText(monthWiseLeave.getMonth());
+        mApprovedLeavesText.setText(String.valueOf(monthWiseLeave.getApproved()) + " Days");
+        mRejectedLeavesText.setText(String.valueOf(monthWiseLeave.getRejected()) + " Days");
+        mCancelledLeavesText.setText(String.valueOf(monthWiseLeave.getCancelled()) + " Days");
+        mPendingLeavesText.setText(String.valueOf(monthWiseLeave.getPending()) + " Days");
+        mMonthDetailsContainer.setVisibility(View.VISIBLE);
 
     }
 
 
     private void setDataToChart2(MonthWiseLeave monthWiseLeave) {
 
-        mChart2.setVisibility(View.VISIBLE);
+        //mChart2.setVisibility(View.VISIBLE);
         mChart2.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
@@ -288,5 +413,33 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     @Override
     public void onNothingSelected() {
 
+        mMonthDetailsContainer.setVisibility(View.GONE);
     }
+
+
+    private int[] createPalleteForMonths() {
+
+        int[] LIBERTY_COLORS = {
+                Color.rgb(120, 144, 156),//Jan - Blue Grey
+                Color.rgb(77, 208, 225),//Feb  - Sky Blue
+                Color.rgb(117, 117, 117),//Mar - Grey
+                Color.rgb(251, 141, 0), //April - Orange
+                Color.rgb(128, 203, 196),//May - Teal Blue Green
+                Color.rgb(206, 147, 216), //June - Purple
+                Color.rgb(255, 112, 67),//July - Red
+                Color.rgb(220, 231, 117), //Aug -
+                Color.rgb(69, 39, 160), //Sept -
+                Color.rgb(255, 213, 79), //Oct - yellow
+                Color.rgb(128, 222, 234),//Nov - Blue
+                Color.rgb(248, 187, 208)// Dec - Pink Material light
+        };
+
+        return LIBERTY_COLORS;
+    }
+
+
+    //bhaskharr9@gmail.com
+    //5L#qL2n%
+    //259619
+
 }

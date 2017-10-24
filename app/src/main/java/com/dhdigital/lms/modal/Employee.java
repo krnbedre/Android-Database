@@ -21,6 +21,7 @@ public class Employee {
     private Employee manager;
     private Employee offshoreManager;
     private Request userPreference;
+    private MasterData team;
     private Files fileUpload;
     private String[] employeeTravelPreferences;
 
@@ -182,5 +183,14 @@ public class Employee {
 
     public void setFileUpload(Files fileUpload) {
         this.fileUpload = fileUpload;
+    }
+
+
+    public MasterData getTeam() {
+        return team;
+    }
+
+    public void setTeam(MasterData team) {
+        this.team = team;
     }
 }

@@ -6,63 +6,49 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dhdigital.lms.R;
-import com.dhdigital.lms.activities.LoginActivity;
+import com.dhdigital.lms.activities.LandingPageActivity;
 import com.dhdigital.lms.gcm.model.NotificationAction;
-import com.dhdigital.lms.net.HeaderManager;
-import com.google.android.gms.gcm.GcmListenerService;
-
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 /**
- * Created by Shiv on 29/3/16.
+ * Created by admin on 24/10/17.
  */
-public class DHGcmListenerService extends GcmListenerService {
-    private static final String TAG = DHGcmListenerService.class.getSimpleName();
-    private final String EXTRA_NOTIFICATION_ACTION = "extra_notification_action";
-//    public static final String REFERENCE_NO = "reference_no";
-//    public static final String MODULE_NAME = "module_name";
-//    public static final String TASK_ID = "task_id";
 
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private static final String TAG = "FCM Service";
+    private final String EXTRA_NOTIFICATION_ACTION = "extra_notification_action";
 
     @Override
-    public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-        Log.d(TAG, "@Shiv  onMessageReceived.... ");
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        // TODO: Handle FCM messages here.
+        // If the application is in the foreground handle both data and notification messages here.
+        // Also if you intend on generating your own notifications as a result of a received FCM
+        // message, here is where that should be initiated.
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         NotificationAction notiAction = new NotificationAction();
-        notiAction = buildNotificationAction(data,notiAction);
+        notiAction = buildNotificationAction(remoteMessage.getNotification(), notiAction);
         sendNotification(notiAction);
     }
 
     /**
      * Used to build the Notification action by storing data from broadcasted GCM bundle
+     *
      * @param data
      * @param notiAction
      * @return NotificationAction
      */
-    private NotificationAction buildNotificationAction(Bundle data, NotificationAction notiAction ){
-        notiAction.setTitle(data.getString(DHGcmConstants.TITLE));
-        notiAction.setBody(data.getString(DHGcmConstants.BODY));
-        notiAction.setModule(data.getString(DHGcmConstants.MODULE));
-        notiAction.setType(data.getString(DHGcmConstants.TYPE));
-        notiAction.setTaskId(data.getString(DHGcmConstants.TASK_ID));
-        notiAction.setReferenceNo(data.getString(DHGcmConstants.REFERENCE_NO));
+    private NotificationAction buildNotificationAction(RemoteMessage.Notification data, NotificationAction notiAction) {
+        notiAction.setTitle(data.getTitle());
+        notiAction.setBody(data.getBody());
         return notiAction;
     }
 
-    /**
-     * This API is used to check if user is logged in to Application
-     * @return
-     */
-    private boolean isUserLoggedIn() {
-        if (HeaderManager.isCookieAvailable(this)) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Create and show a simple notification containing the received GCM message.
@@ -72,22 +58,14 @@ public class DHGcmListenerService extends GcmListenerService {
     private void sendNotification(NotificationAction notiAction) {
         String module = notiAction.getModule();
         String type = notiAction.getType();
-        Intent intent = null;
-
-        if (!isUserLoggedIn()) {
-            intent = new Intent(this, LoginActivity.class);
-        } else {
-
-
-        }
-
+        Intent intent = new Intent(this, LandingPageActivity.class);
         intent.putExtra(EXTRA_NOTIFICATION_ACTION, notiAction);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.user_disp_icon)
                 .setContentTitle(notiAction.getTitle())
                 .setContentText(notiAction.getBody())
                 .setAutoCancel(true)
@@ -97,5 +75,4 @@ public class DHGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) (System.currentTimeMillis() % 10000), notificationBuilder.build());
     }
-
 }

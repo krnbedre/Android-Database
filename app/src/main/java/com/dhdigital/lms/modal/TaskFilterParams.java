@@ -6,6 +6,14 @@ package com.dhdigital.lms.modal;
 
 public class TaskFilterParams {
 
+    private String leaveType;
+    private String empId;
+    private String startDate;
+    private String endDate;
+    private String status;
+    private String leaveReason;
+    private String teamId;
+
     public String getLeaveType() {
         return leaveType;
     }
@@ -54,11 +62,11 @@ public class TaskFilterParams {
         this.leaveReason = leaveReason;
     }
 
-    private String leaveType;
-    private String empId;
-    private String startDate;
-    private String endDate;
-    private String status;
-    private String leaveReason;
+    public String getTeamId() {
+        return teamId;
+    }
 
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
 }

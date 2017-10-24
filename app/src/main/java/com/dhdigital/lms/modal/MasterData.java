@@ -93,7 +93,7 @@ public class MasterData implements Parcelable {
         LeaveType,
         LeaveReason,
         Team,
-        Holiday,
+        holidaysList,
         rejectReason
 
     }
