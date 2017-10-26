@@ -38,7 +38,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
     private View view;
     private PieChart mChart1, mChart2;
-    private TextView mChartTitle, mMonthSelectedTitle, mApprovedLeavesText, mRejectedLeavesText, mPendingLeavesText, mCancelledLeavesText;
+    private TextView mChartTitle, mMonthSelectedTitle, mApprovedLeavesText, mRejectedLeavesText, mPendingLeavesText, mCancelledLeavesText, mTakenLeavesText;
     private LinearLayout mMonthDetailsContainer;
 
     private List<MonthWiseLeave> monthWiseLeaveList = new ArrayList<>();
@@ -87,6 +87,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         mRejectedLeavesText = (TextView) view.findViewById(R.id.rejected_value);
         mCancelledLeavesText = (TextView) view.findViewById(R.id.cancelled_value);
         mPendingLeavesText = (TextView) view.findViewById(R.id.pending_value);
+        mTakenLeavesText = (TextView) view.findViewById(R.id.taken_value);
         mMonthDetailsContainer = (LinearLayout) view.findViewById(R.id.month_details_container);
         mMonthDetailsContainer.setVisibility(View.GONE);
     }
@@ -167,6 +168,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
             // the chart.
 
             for (int i = 0; i < monthWiseLeaveList.size(); i++) {
+
                 entries.add(new PieEntry(calculateLeavePercentagePerMonth(monthWiseLeaveList.get(i)),
                         monthWiseLeaveList.get(i).getMonth(),
                         getResources().getDrawable(R.drawable.calendar)));
@@ -226,25 +228,40 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         float rejected_leaves = 0.0f;
         float pending_leaves = 0.0f;
         float cancelled_leaves = 0.0f;
+        float taken_leaves = 0.0f;
         for (int i = 0; i < monthWiseLeaveList.size() ; i++) {
             approved_leaves = approved_leaves + monthWiseLeaveList.get(i).getApproved();
             rejected_leaves = rejected_leaves + monthWiseLeaveList.get(i).getRejected();
             pending_leaves = pending_leaves + monthWiseLeaveList.get(i).getPending();
             cancelled_leaves = cancelled_leaves + monthWiseLeaveList.get(i).getCancelled();
+            taken_leaves = taken_leaves + monthWiseLeaveList.get(i).getTaken();
         }
 
-        entries.add(new PieEntry(approved_leaves,
-                AppConstants.APPROVED,
-                getResources().getDrawable(R.drawable.calendar)));
-        entries.add(new PieEntry(rejected_leaves,
-                AppConstants.REJECTED,
-                getResources().getDrawable(R.drawable.calendar)));
-        entries.add(new PieEntry(pending_leaves,
-                AppConstants.PENDING,
-                getResources().getDrawable(R.drawable.calendar)));
-        entries.add(new PieEntry(cancelled_leaves,
-                AppConstants.CANCELLED,
-                getResources().getDrawable(R.drawable.calendar)));
+        if (approved_leaves > 0) {
+            entries.add(new PieEntry(approved_leaves,
+                    AppConstants.APPROVED,
+                    getResources().getDrawable(R.drawable.calendar)));
+        }
+        if (rejected_leaves > 0) {
+            entries.add(new PieEntry(rejected_leaves,
+                    AppConstants.REJECTED,
+                    getResources().getDrawable(R.drawable.calendar)));
+        }
+        if (pending_leaves > 0) {
+            entries.add(new PieEntry(pending_leaves,
+                    AppConstants.PENDING,
+                    getResources().getDrawable(R.drawable.calendar)));
+        }
+        if (cancelled_leaves > 0) {
+            entries.add(new PieEntry(cancelled_leaves,
+                    AppConstants.CANCELLED,
+                    getResources().getDrawable(R.drawable.calendar)));
+        }
+        if (taken_leaves > 0) {
+            entries.add(new PieEntry(taken_leaves,
+                    AppConstants.TAKEN,
+                    getResources().getDrawable(R.drawable.calendar)));
+        }
 
         if (monthWiseLeaveList.size() == 0) {
             mChart1.setNoDataText("No leaves taken");
@@ -331,6 +348,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         mRejectedLeavesText.setText(String.valueOf(monthWiseLeave.getRejected()) + " Days");
         mCancelledLeavesText.setText(String.valueOf(monthWiseLeave.getCancelled()) + " Days");
         mPendingLeavesText.setText(String.valueOf(monthWiseLeave.getPending()) + " Days");
+        mTakenLeavesText.setText(String.valueOf(monthWiseLeave.getTaken()) + " Days");
         mMonthDetailsContainer.setVisibility(View.VISIBLE);
 
     }

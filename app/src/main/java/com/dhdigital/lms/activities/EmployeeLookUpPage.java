@@ -59,8 +59,8 @@ public class EmployeeLookUpPage extends BaseActivity {
         setContentView(R.layout.employee_look_up_page);
         mTeamSpinner = (AppCompatSpinner) findViewById(R.id.employee_spn);
         mEmployeeListView = (ListView) findViewById(R.id.list_view);
-        listAdapter = new ListAdapter(this, employeeList);
-        mEmployeeListView.setAdapter(listAdapter);
+        //listAdapter = new ListAdapter(this, employeeList);
+        //mEmployeeListView.setAdapter(listAdapter);
         initToolBar();
         getMyTeams();
         instantiateSearchListener();
@@ -139,7 +139,8 @@ public class EmployeeLookUpPage extends BaseActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                    if (position == teamList.size()) {
+                    employeeList.clear();
+                    if (position == teamList.size() - 1) {
                         getEmployeesUnderMe();
                     } else {
 
@@ -160,6 +161,7 @@ public class EmployeeLookUpPage extends BaseActivity {
 
     private void getMyTeams() {
 
+        //showProgressDialog("fetching teams....");
         Type type = new TypeToken<ArrayList<MasterData>>() {
         }.getType();
 
@@ -181,6 +183,7 @@ public class EmployeeLookUpPage extends BaseActivity {
 
     private void getEmployeesUnderteam() {
 
+        showProgressDialog("fetching employees....");
         Type type = new TypeToken<ArrayList<Employee>>() {
         }.getType();
 
@@ -203,6 +206,7 @@ public class EmployeeLookUpPage extends BaseActivity {
 
     private void getEmployeesUnderMe() {
 
+        showProgressDialog("fetching employees....");
         Type type = new TypeToken<ArrayList<Employee>>() {
         }.getType();
 
@@ -228,17 +232,17 @@ public class EmployeeLookUpPage extends BaseActivity {
 
         switch (actionID) {
             case NetworkEvents.GET_EMPLOYEES:
+                removeProgressDialog();
                 if (status && serviceResponse instanceof List<?>) {
-                    if (employeeList.size() > 0) {
-                        employeeList.clear();
-                    }
-                    employeeList.clear();
                     ArrayList<Employee> employeesList = (ArrayList<Employee>) serviceResponse;
                     employeeList.addAll(employeesList);
+                    listAdapter = new ListAdapter(this, employeesList);
+                    mEmployeeListView.setAdapter(listAdapter);
                     listAdapter.notifyDataSetChanged();
                 }
                 break;
             case NetworkEvents.GET_TEAMS:
+                removeProgressDialog();
                 if (status && serviceResponse instanceof List<?>) {
 
                     if (teamList.size() > 0) {

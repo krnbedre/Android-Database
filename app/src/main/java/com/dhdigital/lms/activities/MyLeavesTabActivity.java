@@ -26,6 +26,8 @@ import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.volley.ext.GsonObjectRequest;
 import com.kelltontech.volley.ext.RequestManager;
@@ -33,6 +35,7 @@ import com.kelltontech.volley.ui.activity.BaseActivity;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,8 +129,26 @@ public class MyLeavesTabActivity extends BaseActivity {
     //Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new ListFragment("SCHEDULED",mScheduledLeaves), "SCHEDULED");
-        adapter.addFrag(new ListFragment("PAST",mPastLeaves), "PAST");
+
+
+        // Adding Fragment for Scheduled Leaves
+        ListFragment scheduledFragment = new ListFragment();
+        Bundle bundle = new Bundle();
+        Log.d("TAG", "Scheduled Leaves List :" + mScheduledLeaves.size());
+        bundle.putParcelableArrayList(AppConstants.LEAVES_FRAGMENT, mScheduledLeaves);
+        scheduledFragment.setArguments(bundle);
+        adapter.addFrag(scheduledFragment, "SCHEDULED");
+
+
+        // Adding Fragment for Past Leaves
+        ListFragment pastLeavesFragment = new ListFragment();
+        Bundle pastLeavesbundle = new Bundle();
+        Log.d("TAG", "Past Leaves List :" + mPastLeaves.size());
+        pastLeavesbundle.putParcelableArrayList(AppConstants.LEAVES_FRAGMENT, mPastLeaves);
+        pastLeavesFragment.setArguments(pastLeavesbundle);
+        adapter.addFrag(pastLeavesFragment, "PAST");
+
+
         viewPager.setAdapter(adapter);
     }
 
@@ -247,10 +268,21 @@ public class MyLeavesTabActivity extends BaseActivity {
         }.getType();
 
 
-        String url = APIUrls.MY_LEAVES + "?p=" + mTRPageIndex + "&ps=30";
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Map<String, Object> postPayload = new HashMap<>();
+        postPayload.put("page", mTRPageIndex);
+        postPayload.put("pageSize", 30);
 
 
-        RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesTabActivity.this), null, listType, new VolleyErrorListener(MyLeavesTabActivity.this, MyLeavesTabActivity.this, event)) {
+        String payload = gson.toJson(postPayload);
+
+
+        Log.d("PAYLOAD", " " + payload);
+
+        String url = APIUrls.MY_LEAVES;
+
+
+        RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesTabActivity.this), payload, listType, new VolleyErrorListener(MyLeavesTabActivity.this, MyLeavesTabActivity.this, event)) {
             @Override
             public void deliverResponse(MyleavesResponse response, Map<String, String> responseHeaders) {
                 updateUi(true, event, response);
@@ -285,12 +317,32 @@ public class MyLeavesTabActivity extends BaseActivity {
         Type listType = new TypeToken<MyleavesResponse>() {
         }.getType();
 
-        String url = APIUrls.MY_LEAVES + "?p=" + 0 + "&size=30" + "&leaveType=" + leaveTypeId + "&statusId=" + statusId;
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Map<String, Object> postPayload = new HashMap<>();
+        postPayload.put("leaveType", leaveTypeId);
+        postPayload.put("status", statusId);
+        if (endDate != 0) {
+            postPayload.put("endDate", endDate);
+        }
+        if (startDate != 0) {
+            postPayload.put("startDate", startDate);
+        }
+        postPayload.put("page", 0);
+        postPayload.put("pageSize", 30);
+
+
+        String payload = gson.toJson(postPayload);
+
+
+        Log.d("PAYLOAD", " " + payload);
+
+        String url = APIUrls.MY_LEAVES;
         //+"&startDate="+startDate+"&endDate="+endDate;
 
 
         Log.d("URL", url);
-        RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesTabActivity.this), null, listType, new VolleyErrorListener(MyLeavesTabActivity.this, MyLeavesTabActivity.this, event)) {
+        RequestManager.addRequest(new GsonObjectRequest<MyleavesResponse>(url, HeaderManager.prepareMasterDataHeaders(MyLeavesTabActivity.this), payload, listType, new VolleyErrorListener(MyLeavesTabActivity.this, MyLeavesTabActivity.this, event)) {
             @Override
             public void deliverResponse(MyleavesResponse response, Map<String, String> responseHeaders) {
                 updateUi(true, event, response);

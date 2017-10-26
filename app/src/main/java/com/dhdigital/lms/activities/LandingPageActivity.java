@@ -61,11 +61,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.CALENDAR;
-import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.LOG_OUT;
-import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.MY_LEAVES;
-import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.NEW_LEAVE_REQUEST;
-import static com.dhdigital.lms.adapters.CustomExpandableListAdapter.PERSONAL_TASK;
 import static com.dhdigital.lms.util.AppConstants.EMPLOYEE_FILTER_INTENT;
 import static com.dhdigital.lms.util.AppConstants.EMP_FILTER;
 import static com.dhdigital.lms.util.AppConstants.EMP_NAME_FILTER;
@@ -108,7 +103,7 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
     private List<LeaveType> leaveTypeList = new ArrayList<LeaveType>();
     private AppCompatSpinner leaveTypeSpinner, employeeSpinner;
     private LeaveType mSelectedLeaveType = null;
-    private String mSelectedUserId = String.valueOf(GlobalData.gLoggedInUser.getEmployee().getId());
+    private String mSelectedUserId = null;
     private TextView mleaveTypeText, mLeaveBalanceText;
     private DashBoardModal mDashBoardData;
     private int selectionCurrent;
@@ -140,6 +135,7 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
         employeeSpinner = (AppCompatSpinner) findViewById(R.id.employee_spn);
         mLeaveBalanceText = (TextView) findViewById(R.id.leave_bal_txt);
         instantiateEmployeeSpinner();
+        mSelectedUserId = String.valueOf(GlobalData.gLoggedInUser.getEmployee().getId());
         mLeaveBalanceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,11 +260,11 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
                     if (position == 0) {
                         mSelectedUserId = String.valueOf(GlobalData.gLoggedInUser.getEmployee().getId());
                         if (null != mSelectedLeaveType) {
-                            if (employeeIds.size() >= 2) {
+                            if (employeeIds.size() > 2) {
                                 employeeIds.remove(2);
                             }
 
-                            if (emp_adapterlist.size() >= 2) {
+                            if (emp_adapterlist.size() > 2) {
                                 emp_adapterlist.remove(2);
                             }
                             requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()), mSelectedUserId);
@@ -399,25 +395,26 @@ public class LandingPageActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onGroupExpand(int groupPosition) {
 
-                switch (groupPosition) {
-                    case NEW_LEAVE_REQUEST:
+                String grouptitle = expandableListTitle.get(groupPosition);
+                switch (grouptitle) {
+                    case AppConstants.APPLY_LEAVE:
                         View title = findViewById(R.id.expandedListItem);
                         Intent newLeaveReq = new Intent(mContext, NewLeaveRequestActivity.class);
                         startActivity(newLeaveReq);
                         break;
-                    case MY_LEAVES:
+                    case AppConstants.MY_LEAVES:
                         Intent myLeavesAct = new Intent(mContext, MyLeavesTabActivity.class);
                         startActivity(myLeavesAct);
                         break;
-                    case PERSONAL_TASK:
+                    case AppConstants.APPROVE_LEAVE:
                         Intent myTasks = new Intent(mContext, ApproverTasksActivity.class);
                         startActivity(myTasks);
                         break;
-                    case CALENDAR:
+                    case AppConstants.CALENDAR:
                         Intent myCalendar = new Intent(mContext, HolidayListActivity.class);
                         startActivity(myCalendar);
                         break;
-                    case LOG_OUT:
+                    case AppConstants.LOG_OUT:
                         onLogoutBtnClicked();
                         break;
                 }

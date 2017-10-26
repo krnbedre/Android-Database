@@ -404,6 +404,7 @@
     <string name="rejected_title">Rejected :</string>
     <string name="pending_title">Pending :</string>
     <string name="cancelled_title">Cancelled :</string>
+    <string name="taken">Taken :</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="reporting_to">Reports To</string>
@@ -415,5 +416,11 @@
     <string name="no_tasks">No Tasks found</string>
 
     <string name="text_color_primary">#414042</string>
+
+    <string name="holo_blue_light">#ff33b5e5</string>
+    <string name="error_text_color">#A72727</string>
+    <string name="common_grey_2">#828080</string>
+    <string name="greenBulb">#388e3c</string>
+    <string name="holo_orange_light">#ffffbb33</string>
 
 </resources>

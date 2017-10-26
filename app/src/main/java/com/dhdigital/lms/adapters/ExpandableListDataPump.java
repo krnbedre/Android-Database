@@ -5,7 +5,8 @@ package com.dhdigital.lms.adapters;
  */
 
 
-
+import com.dhdigital.lms.modal.GlobalData;
+import com.dhdigital.lms.modal.UserRole;
 import com.dhdigital.lms.util.AppConstants;
 
 import java.util.ArrayList;
@@ -45,7 +46,15 @@ public class ExpandableListDataPump {
 
         expandableListDetail.put(AppConstants.APPLY_LEAVE, leavesList);
         expandableListDetail.put(AppConstants.MY_LEAVES, leavesList);
-        expandableListDetail.put(AppConstants.APPROVE_LEAVE, leavesList);
+
+        List<UserRole> userRoles = GlobalData.gLoggedInUser.getUserRoles();
+        for (int i = 0; i < userRoles.size(); i++) {
+            if (userRoles.get(i).getAuthority().equalsIgnoreCase("APPROVER")) {
+                expandableListDetail.put(AppConstants.APPROVE_LEAVE, leavesList);
+            }
+        }
+
+
         expandableListDetail.put(AppConstants.CALENDAR, leavesList);
         expandableListDetail.put(AppConstants.LOG_OUT, logout);
         return expandableListDetail;

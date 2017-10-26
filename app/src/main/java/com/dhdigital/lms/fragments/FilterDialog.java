@@ -74,10 +74,13 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
 
         List<String> emp_adapterlist = new ArrayList<String>();
 
+
         final List<String> employeeIds = new ArrayList<String>();
+        emp_adapterlist.add(0, "-");
+        employeeIds.add(0, "_");
         for (int i = 0; i < employeeList.size(); i++) {
-            emp_adapterlist.add(i, employeeList.get(i).getCompleteName());
-            employeeIds.add(i, String.valueOf(employeeList.get(i).getId()));
+            emp_adapterlist.add(i + 1, employeeList.get(i).getCompleteName());
+            employeeIds.add(i + 1, String.valueOf(employeeList.get(i).getId()));
         }
         //requestDashBoardData(String.valueOf(mSelectedLeaveType.getId()),null);
         emp_adapter = new ArrayAdapter<>(mContext, R.layout.support_simple_spinner_dropdown_item, emp_adapterlist);
@@ -87,7 +90,11 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                mSelectedEmpId = employeeIds.get(position);
+                if (position == 0) {
+
+                } else {
+                    mSelectedEmpId = employeeIds.get(position);
+                }
                 // mSelectedTeamId = null;
             }
 
@@ -171,6 +178,7 @@ public class FilterDialog extends Dialog implements View.OnClickListener {
         mSelectedTeamId = null;
         //instantiateEmployeeSpinner();
         instantiateTeamSpinner();
+        dismiss();
     }
 
     private void onApplySearchBtnClicked() {

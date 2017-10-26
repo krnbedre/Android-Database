@@ -69,6 +69,7 @@ public class MyLeavesFilterDialog extends BaseActivity implements View.OnClickLi
         mToDateText.setOnClickListener(this);
         instantiateLeaveTypeSpinner();
         instantiateStatusSpinner();
+        findViewById(R.id.touch_outside).setOnClickListener(this);
 
         //initToolBar();
 
@@ -190,6 +191,9 @@ public class MyLeavesFilterDialog extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.to_date_txt:
                 showEndDateCalendar();
+                break;
+            case R.id.touch_outside:
+                finish();
                 break;
 
         }

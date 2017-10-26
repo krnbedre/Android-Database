@@ -30,9 +30,9 @@ public class SplashScreenActivity extends BaseActivity{
 
         final Intent loginScreen  = new Intent(this,LoginActivity.class);
         if (isUserLoggedIn()) {
-            loginScreen.putExtra("NAVIGATION","LOGGED_IN");
+            loginScreen.putExtra(AppConstants.NAVIGATION, AppConstants.LOGGED_IN);
         } else {
-            loginScreen.putExtra("NAVIGATION","LOGGED_OUT");
+            loginScreen.putExtra(AppConstants.NAVIGATION, AppConstants.LOGGED_OUT);
         }
 
         Handler timer = new Handler();

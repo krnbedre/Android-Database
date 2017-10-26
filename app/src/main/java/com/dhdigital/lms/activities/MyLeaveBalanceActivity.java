@@ -19,6 +19,7 @@ import com.dhdigital.lms.modal.LeaveEntitlement;
 import com.dhdigital.lms.modal.LeaveType;
 import com.dhdigital.lms.modal.MonthWiseLeave;
 import com.dhdigital.lms.net.APIUrls;
+import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
@@ -129,7 +130,7 @@ public class MyLeaveBalanceActivity extends BaseActivity implements View.OnClick
         Type type = new TypeToken<Map>() {
         }.getType();
 
-        RequestManager.addRequest(new GsonObjectRequest<Object>(APIUrls.LEAVE_BAL_URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.MY_LEAVES_BALANCE)) {
+        RequestManager.addRequest(new GsonObjectRequest<Object>(APIUrls.LEAVE_BAL_URL, HeaderManager.prepareMasterDataHeaders(this), null, type, new VolleyErrorListener(this, this, NetworkEvents.MY_LEAVES_BALANCE)) {
 
             @Override
             public void deliverResponse(Object response, Map<String, String> responseHeaders) {
@@ -164,7 +165,7 @@ public class MyLeaveBalanceActivity extends BaseActivity implements View.OnClick
 
         Log.d("URL", URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<List>(URL, null, type, new VolleyErrorListener(this, this, NetworkEvents.LEAVE_DASHBOARD)) {
+        RequestManager.addRequest(new GsonObjectRequest<List>(URL, HeaderManager.prepareMasterDataHeaders(this), null, type, new VolleyErrorListener(this, this, NetworkEvents.LEAVE_DASHBOARD)) {
             @Override
             public void deliverResponse(List response, Map<String, String> responseHeaders) {
 

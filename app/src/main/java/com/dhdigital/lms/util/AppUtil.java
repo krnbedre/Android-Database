@@ -1,6 +1,5 @@
 package com.dhdigital.lms.util;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -41,24 +39,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.activities.LoginActivity;
 import com.dhdigital.lms.glide.HeaderLoader;
-import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.net.DeviceInfoUtils;
 import com.dhdigital.lms.net.HeaderManager;
-import com.dhdigital.lms.net.NetworkEvents;
-import com.dhdigital.lms.net.VolleyErrorListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -378,37 +365,6 @@ public class AppUtil {
 
 
 
-   /* public static void executeLogoutAPI(final BaseActivity activity) {
-        Type type = new TypeToken<String>() {
-        }.getType();
-        RequestManager.addRequest(new GsonObjectRequest<String>(APIUrls.LOGOUT_URL, HeaderManager.prepareMasterDataHeaders(activity), null, type, new VolleyErrorListener(activity, activity, NetworkEvents.INVALIDATE_USER)) {
-            @Override
-            public void deliverResponse(String response, Map<String, String> responseHeaders) {
-                activity.updateUi(true, NetworkEvents.INVALIDATE_USER, response);
-            }
-        }, AppConstants.REQUEST_TIMEOUT_AVG);
-    }*/
-
-    public static void onNewTravelLayoutClicked(final Context context, Activity callingActivity, final Class cla, View view) {
-        AppUtil.sendBroadcastToFinishMiddleActivities(context);
-        Handler handler  = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                Intent intent = new Intent(context, cla);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(AppConstants.NAVIGATION, AppConstants.NEW_TRAVEL_REQUEST);
-
-                context.startActivity(intent);
-            }
-        }, 500);
-
-
-
-    }
-
-
 
     public static void goToLoginScreen(Context context) {
         PreferenceUtil.clearCookies(context);
@@ -429,16 +385,6 @@ public class AppUtil {
     public static void sendBroadcastToFinishMiddleActivities(Context context) {
         Intent intent = new Intent(AppConstants.ACTION_DH_FINISH_SELF);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-    }
-
-
-    public static String getFormattedCurrency(Double sum){
-        if (sum != null) {
-            DecimalFormat df = new DecimalFormat("###.##");
-            return df.format(sum);
-        } else {
-            return "0.00";
-        }
     }
 
 

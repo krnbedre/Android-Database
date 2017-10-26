@@ -10,8 +10,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dhdigital.lms.R;
-import com.dhdigital.lms.activities.LandingPageActivity;
+import com.dhdigital.lms.activities.LoginActivity;
 import com.dhdigital.lms.gcm.model.NotificationAction;
+import com.dhdigital.lms.util.AppConstants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -21,7 +22,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FCM Service";
-    private final String EXTRA_NOTIFICATION_ACTION = "extra_notification_action";
+
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -58,8 +59,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(NotificationAction notiAction) {
         String module = notiAction.getModule();
         String type = notiAction.getType();
-        Intent intent = new Intent(this, LandingPageActivity.class);
-        intent.putExtra(EXTRA_NOTIFICATION_ACTION, notiAction);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra(AppConstants.NAVIGATION, AppConstants.NOTIFICATION);
+        intent.putExtra(AppConstants.EXTRA_NOTIFICATION_ACTION, notiAction);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

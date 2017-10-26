@@ -9,12 +9,36 @@ import android.os.Parcelable;
 
 public class MonthWiseLeave implements Parcelable{
 
+    public static final Creator<MonthWiseLeave> CREATOR = new Creator<MonthWiseLeave>() {
+        @Override
+        public MonthWiseLeave createFromParcel(Parcel in) {
+            return new MonthWiseLeave(in);
+        }
+
+        @Override
+        public MonthWiseLeave[] newArray(int size) {
+            return new MonthWiseLeave[size];
+        }
+    };
     private float Approved;
     private float Rejected;
     private float Cancelled;
     private float Pending;
+    private float Taken;
     private int Year;
     private String Month;
+
+    public MonthWiseLeave() {
+    }
+
+    public MonthWiseLeave(Parcel in) {
+        Approved = in.readInt();
+        Rejected = in.readFloat();
+        Cancelled = in.readFloat();
+        Year = in.readInt();
+        Pending = in.readFloat();
+        Month = in.readString();
+    }
 
     public float getApproved() {
         return Approved;
@@ -64,19 +88,6 @@ public class MonthWiseLeave implements Parcelable{
         Month = month;
     }
 
-
-    public MonthWiseLeave() {
-    }
-
-    public MonthWiseLeave(Parcel in) {
-        Approved = in.readInt();
-        Rejected = in.readFloat();
-        Cancelled = in.readFloat();
-        Year = in.readInt();
-        Pending = in.readFloat();
-        Month = in.readString();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -93,16 +104,11 @@ public class MonthWiseLeave implements Parcelable{
         parcel.writeString(Month);
     }
 
+    public float getTaken() {
+        return Taken;
+    }
 
-    public static final Creator<MonthWiseLeave> CREATOR = new Creator<MonthWiseLeave>() {
-        @Override
-        public MonthWiseLeave createFromParcel(Parcel in) {
-            return new MonthWiseLeave(in);
-        }
-
-        @Override
-        public MonthWiseLeave[] newArray(int size) {
-            return new MonthWiseLeave[size];
-        }
-    };
+    public void setTaken(float taken) {
+        Taken = taken;
+    }
 }

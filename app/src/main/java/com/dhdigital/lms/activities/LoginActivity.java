@@ -19,6 +19,7 @@ import com.android.volley.AuthFailureError;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.db.MasterDataTable;
 import com.dhdigital.lms.gcm.MyFirebaseMessagingService;
+import com.dhdigital.lms.gcm.model.NotificationAction;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Users;
 import com.dhdigital.lms.net.APIUrls;
@@ -35,6 +36,12 @@ import com.kelltontech.volley.ui.activity.BaseActivity;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import static com.dhdigital.lms.util.AppConstants.EXTRA_NOTIFICATION_ACTION;
+import static com.dhdigital.lms.util.AppConstants.LOGGED_IN;
+import static com.dhdigital.lms.util.AppConstants.LOGGED_OUT;
+import static com.dhdigital.lms.util.AppConstants.NAVIGATION;
+import static com.dhdigital.lms.util.AppConstants.NOTIFICATION;
 
 /**
 * This class is used for displaying user with Login page
@@ -61,13 +68,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void switchNavigation() {
 
-        String loggedInStatus = getIntent().getStringExtra("NAVIGATION");
+        String loggedInStatus = getIntent().getStringExtra(NAVIGATION);
         if (null != loggedInStatus) {
             switch (loggedInStatus) {
-                case "LOGGED_IN":
+                case LOGGED_IN:
                     executeLoginFromCookie();
                     break;
-                case "LOGGED_OUT":
+                case LOGGED_OUT:
+                    break;
+                case NOTIFICATION:
+                    if (isUserLoggedIn()) {
+                        NotificationAction notificationAction = getIntent().getParcelableExtra(EXTRA_NOTIFICATION_ACTION);
+                        Intent leaveDetails = new Intent(this, LeaveDetailsActivity.class);
+                        leaveDetails.putExtra(NAVIGATION, NOTIFICATION);
+                        leaveDetails.putExtra(EXTRA_NOTIFICATION_ACTION, notificationAction);
+                        startActivity(leaveDetails);
+                    }
                     break;
             }
         }

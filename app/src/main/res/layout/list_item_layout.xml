@@ -54,6 +54,17 @@
                 android:textSize="14dp"
                 android:textStyle="normal" />
 
+            <TextView
+                android:id="@+id/textView_team"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:fontFamily="@string/font1"
+                android:text="@string/app_name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14dp"
+                android:textStyle="normal" />
+
         </LinearLayout>
     </LinearLayout>
 

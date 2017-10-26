@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dhdigital.lms.R;
+import com.dhdigital.lms.gcm.model.NotificationAction;
 import com.dhdigital.lms.glide.HeaderLoader;
 import com.dhdigital.lms.modal.Employee;
 import com.dhdigital.lms.modal.Files;
@@ -45,6 +47,9 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.dhdigital.lms.util.AppConstants.EXTRA_NOTIFICATION_ACTION;
+import static com.dhdigital.lms.util.AppConstants.NOTIFICATION;
+
 /**
  * Created by admin on 06/10/17.
  */
@@ -53,7 +58,7 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
 
 
     private TextView mRequestorName, mUserIDTextView, mLeaveRefId, mLeaveStatus, mFromDateText, mToDateText, mTotalDaystext, mLeaveReasontext, mManagerText;
-    private EditText mReasonDescriptionText;
+    private EditText mArrpoverCommentsText, mRequestorCommemtsText;
     private Button mCancelButton, mLeaveBalance, mApproveBtn, mRejectBtn;
     private ImageView mReqImage;
     private String NAVIGATION_PAGE = AppConstants.REQUESTOR;
@@ -68,7 +73,46 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
         NAVIGATION_PAGE = getIntent().getStringExtra(AppConstants.NAVIGATION);
         initToolBar();
         initWidgets();
-        populateLeaveData();
+        switch (NAVIGATION_PAGE) {
+            case NOTIFICATION:
+                NotificationAction notificationAction = getIntent().getParcelableExtra(EXTRA_NOTIFICATION_ACTION);
+                if (notificationAction.getType().equalsIgnoreCase(AppConstants.APPROVER)) {
+                    NAVIGATION_PAGE = AppConstants.APPROVER;
+                } else {
+                    NAVIGATION_PAGE = AppConstants.REQUESTOR;
+                }
+                fetchLeaveDetails(notificationAction.getLeaveId());
+                break;
+            default:
+                populateLeaveData();
+        }
+
+
+    }
+
+    private void fetchLeaveDetails(String leaveId) {
+
+        Type type = new TypeToken<LeaveModal>() {
+        }.getType();
+
+        String URL = APIUrls.GET_LEAVE_DETAILS + "?leaveId=" + leaveId;
+
+        Log.d("URL", URL);
+
+        RequestManager.addRequest(new GsonObjectRequest<LeaveModal>(URL, HeaderManager.prepareMasterDataHeaders(this), null, type, new VolleyErrorListener(this, this, NetworkEvents.GET_LEAVE_REQUEST)) {
+
+            @Override
+            public void deliverResponse(LeaveModal response, Map<String, String> responseHeaders) {
+
+                updateUi(true, NetworkEvents.GET_LEAVE_REQUEST, response);
+            }
+
+            @Override
+            protected VolleyError parseNetworkError(VolleyError volleyError) {
+                return super.parseNetworkError(volleyError);
+            }
+        }, AppConstants.REQUEST_TIMEOUT_AVG);
+
     }
 
     @Override
@@ -100,7 +144,8 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
         mLeaveReasontext = (TextView) findViewById(R.id.leave_reason_txt);
         mManagerText = (TextView) findViewById(R.id.manager_name_txt);
         mLeaveBalance = (Button) findViewById(R.id.view_leave_bal_btn);
-        mReasonDescriptionText = (EditText) findViewById(R.id.manager_comments_txt);
+        mArrpoverCommentsText = (EditText) findViewById(R.id.manager_comments_txt);
+        mRequestorCommemtsText = (EditText) findViewById(R.id.requestor_comments_txt);
         mCancelButton = (Button) findViewById(R.id.button_save);
         mRequestorName = (TextView) findViewById(R.id.requestor_name);
         mReqImage = (ImageView) findViewById(R.id.user_icon);
@@ -135,24 +180,33 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
             mLeaveReasontext.setText(null != leaveModal.getLeaveReason() ? leaveModal.getLeaveReason().getName() : "-");
             mManagerText.setText(null != leaveModal.getApprover() ? leaveModal.getApprover().getCompleteName() : "-");
 
+            mRequestorCommemtsText.setText(leaveModal.getComments());
+            mRequestorCommemtsText.setFocusable(false);
+            mRequestorCommemtsText.setFocusableInTouchMode(false);
+            mRequestorCommemtsText.setEnabled(false);
+
+            mArrpoverCommentsText.setText(leaveModal.getApproverComments());
+            mArrpoverCommentsText.setFocusable(false);
+            mArrpoverCommentsText.setFocusableInTouchMode(false);
+            mArrpoverCommentsText.setEnabled(false);
             loadUserProf(leaveModal.getRequestedBy().getEmployee());
             switch(leaveModal.getStatus().getName().toUpperCase()) {
 
                 case "APPROVED":
                     mCancelButton.setVisibility(View.GONE);
-                    mLeaveStatus.setTextColor(getColor(R.color.greenBulb));
+                    mLeaveStatus.setTextColor(Color.parseColor(getString(R.string.greenBulb)));
                     break;
                 case "TAKEN":
                     mCancelButton.setVisibility(View.GONE);
-                    mLeaveStatus.setTextColor(getColor(android.R.color.holo_blue_light));
+                    mLeaveStatus.setTextColor(Color.parseColor(getString(R.string.holo_blue_light)));
                     break;
                 case "CANCELLED":
                     mCancelButton.setVisibility(View.GONE);
-                    mLeaveStatus.setTextColor(getColor(R.color.common_grey_2));
+                    mLeaveStatus.setTextColor(Color.parseColor(getString(R.string.common_grey_2)));
                     break;
                 case "REJECTED":
                     mCancelButton.setVisibility(View.GONE);
-                    mLeaveStatus.setTextColor(getColor(R.color.error_text_color));
+                    mLeaveStatus.setTextColor(Color.parseColor(getString(R.string.error_text_color)));
                     break;
                 case "APPROVAL PENDING":
                     if (NAVIGATION_PAGE.equalsIgnoreCase(AppConstants.APPROVER)) {
@@ -160,7 +214,7 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
                     } else {
                         mCancelButton.setVisibility(View.VISIBLE);
                     }
-                    mLeaveStatus.setTextColor(getColor(android.R.color.holo_blue_light));
+                    mLeaveStatus.setTextColor(Color.parseColor(getString(R.string.holo_blue_light)));
                     break;
 
             }
@@ -173,7 +227,7 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
 
 
         Files fileUpload = employee.getFileUpload();
-        mRequestorName.setText(employee.getCompleteName());
+        mRequestorName.setText(employee.getCompleteName().toUpperCase());
         mUserIDTextView.setText("Employee Id: " + String.valueOf(employee.getId()));
         if (null != fileUpload) {
 
@@ -228,6 +282,13 @@ public class LeaveDetailsActivity extends BaseActivity implements View.OnClickLi
 
         removeProgressDialog();
         switch (actionID) {
+
+            case NetworkEvents.GET_LEAVE_REQUEST:
+                if (status && serviceResponse instanceof LeaveModal) {
+                    GlobalData.gLeaveModal = (LeaveModal) serviceResponse;
+                    populateLeaveData();
+                }
+                break;
             case NetworkEvents.CANCEL_LEAVE_REQUEST:
                 AppUtil.showSnackBar(findViewById(R.id.button_save), "Leave Cancelled Successfully", Color.parseColor("#259259"));
                 final Handler handler1 = new Handler();

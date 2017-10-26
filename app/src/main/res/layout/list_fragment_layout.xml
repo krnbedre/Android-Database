@@ -7,6 +7,16 @@
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize">
 
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="20sp"
+        android:gravity="center"
+        android:text="No Leaves found"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp"
+        android:visibility="gone" />
     <!--  Recycler View  -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

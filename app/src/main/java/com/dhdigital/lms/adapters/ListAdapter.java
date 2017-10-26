@@ -21,6 +21,7 @@ import com.dhdigital.lms.modal.Files;
 import com.dhdigital.lms.net.APIUrls;
 import com.dhdigital.lms.util.CircleTransform;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  */
 
 public class ListAdapter extends ArrayAdapter<Employee> {
-    private List<Employee> mDataset;
+    private List<Employee> mDataset = new ArrayList<>();
     private Context context;
     private FragmentActivity mContext;
 
@@ -47,6 +48,7 @@ public class ListAdapter extends ArrayAdapter<Employee> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         TextView empName;
         TextView employeeId;
+        TextView teamName;
         ImageView empImage;
         List<String> menuOptions = Arrays.asList("Remove as preferred", "Mark as preferred");
         if (convertView == null) {
@@ -55,17 +57,19 @@ public class ListAdapter extends ArrayAdapter<Employee> {
             empName = (TextView) convertView.findViewById(R.id.textView_username);
             employeeId = (TextView) convertView.findViewById(R.id.textView_userId);
             empImage = (ImageView) convertView.findViewById(R.id.userDispIcon);
+            teamName = (TextView) convertView.findViewById(R.id.textView_team);
 
             Employee employee = mDataset.get(position);
             empName.setText(employee.getCompleteName());
-            employeeId.setText(String.valueOf(employee.getId()));
+            employeeId.setText("Employee Id: " + String.valueOf(employee.getId()));
+            teamName.setText("Team : " + employee.getTeam().getName());
+
             Files fileUpload = employee.getFileUpload();
             if (null != fileUpload) {
 
                 String URL = APIUrls.FILE_DOWNLOAD + "?fileName=" + fileUpload.getFileName() + "&filePath=" + fileUpload.getPathURI();
                 Log.d("IMAGE", "URL: " + URL);
                 //AppUtil.loadThumbNailImage(context,URL ,holder.userIcon);
-
 
                 Glide.with(context)
                         .load(HeaderLoader.getUrlWithHeaders(URL, context))
@@ -75,7 +79,6 @@ public class ListAdapter extends ArrayAdapter<Employee> {
                         .thumbnail(0.5f)
                         .placeholder(R.drawable.user_icon_disp)
                         .into(empImage);
-
 
             }
 

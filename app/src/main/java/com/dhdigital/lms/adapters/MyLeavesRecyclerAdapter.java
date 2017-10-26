@@ -1,7 +1,7 @@
 package com.dhdigital.lms.adapters;
 
 import android.content.Context;
-import android.os.Build;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -46,13 +46,7 @@ public class MyLeavesRecyclerAdapter extends
 
         final LeaveViewHolder holder = (LeaveViewHolder) viewholder;
         //Setting text over textview
-
-
-
-
         LeaveModal leaveModal = arrayList.get(position);
-
-
         holder.from_date.setText(leaveModal.getStartDate() !=0 ? DateTimeUtils.getFormattedDate(leaveModal.getStartDate(), DateTimeUtils.Format.DD_Mmm_YYYY) : "" );
         holder.to_date.setText(leaveModal.getEndDate() !=0 ? DateTimeUtils.getFormattedDate(leaveModal.getEndDate(), DateTimeUtils.Format.DD_Mmm_YYYY) : "" );
 
@@ -69,54 +63,19 @@ public class MyLeavesRecyclerAdapter extends
             switch(leaveModal.getStatus().getName().toUpperCase()) {
 
                 case "APPROVED":
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        status_holder.setBackgroundColor(context.getColor(R.color.greenBulb));
-                        //listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
-                    } else {
-                        status_holder.setBackgroundColor(context.getResources().getColor(R.color.greenBulb, null));
-                        // listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
-                    }
-
+                    status_holder.setBackgroundColor(Color.parseColor(context.getString(R.string.greenBulb)));
                     break;
                 case "TAKEN":
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        status_holder.setBackgroundColor(context.getColor(android.R.color.holo_blue_light));
-                        //listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
-                    } else {
-                        status_holder.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light, null));
-                        // listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
-                    }
-                    //status_holder.setBackgroundColor(context.getColor(android.R.color.holo_blue_light));
+                    status_holder.setBackgroundColor(Color.parseColor(context.getString(R.string.holo_blue_light)));
                     break;
                 case "CANCELLED":
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        status_holder.setBackgroundColor(context.getColor(android.R.color.holo_blue_light));
-                        //listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
-                    } else {
-                        status_holder.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light, null));
-                        // listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
-                    }
-                    //status_holder.setBackgroundColor(context.getColor(R.color.common_grey_2));
+                    status_holder.setBackgroundColor(Color.parseColor(context.getString(R.string.common_grey_2)));
                     break;
                 case "REJECTED":
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        status_holder.setBackgroundColor(context.getColor(R.color.error_text_color));
-                        //listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
-                    } else {
-                        status_holder.setBackgroundColor(context.getResources().getColor(R.color.error_text_color, null));
-                        // listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
-                    }
-                    //status_holder.setBackgroundColor(context.getColor(R.color.error_text_color));
+                    status_holder.setBackgroundColor(Color.parseColor(context.getString(R.string.error_text_color)));
                     break;
                 case "APPROVAL PENDING":
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        status_holder.setBackgroundColor(context.getColor(android.R.color.holo_orange_light));
-                        //listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
-                    } else {
-                        status_holder.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_light, null));
-                        // listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
-                    }
-                    //status_holder.setBackgroundColor(context.getColor(android.R.color.holo_orange_light));
+                    status_holder.setBackgroundColor(Color.parseColor(context.getString(R.string.holo_orange_light)));
                     break;
 
             }

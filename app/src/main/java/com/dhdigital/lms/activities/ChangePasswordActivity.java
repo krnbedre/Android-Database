@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.modal.ChangePassword;
 import com.dhdigital.lms.net.APIUrls;
+import com.dhdigital.lms.net.HeaderManager;
 import com.dhdigital.lms.net.NetworkEvents;
 import com.dhdigital.lms.net.VolleyErrorListener;
 import com.dhdigital.lms.util.AppConstants;
@@ -113,6 +114,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
             switch (actionID) {
                 case NetworkEvents.CHANGE_PWD:
                     AppUtil.showSnackBar(mChangePwdButton, getString(R.string.succes_pwd_changed), Color.parseColor("#3CB371"));
+                    finish();
                     break;
             }
         } else {
@@ -139,6 +141,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                     password.setOldpass(mCurrentPwdText.getText().toString());
                     password.setNewpass(mConfirmPwdText.getText().toString());
                     changeAccountPassword(NetworkEvents.CHANGE_PWD, password);
+
                 }
                 break;
         }
@@ -157,7 +160,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         }.getType();
         String url = APIUrls.CHANGE_PASSWORD;
         String requestPayload = new Gson().toJson(password);
-        RequestManager.addRequest(new GsonObjectRequest<Boolean>(url, requestPayload, listType, new VolleyErrorListener(this, this, event)) {
+        RequestManager.addRequest(new GsonObjectRequest<Boolean>(url, HeaderManager.prepareMasterDataHeaders(this), requestPayload, listType, new VolleyErrorListener(this, this, event)) {
             @Override
             public void deliverResponse(Boolean response, Map<String, String> responseHeaders) {
                 updateUi(true, NetworkEvents.CHANGE_PWD, response);

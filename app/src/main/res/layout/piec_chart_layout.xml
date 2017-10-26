@@ -162,6 +162,35 @@
             android:weightSum="2.5">
 
             <TextView
+                android:id="@+id/taken_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:padding="4sp"
+                android:text="@string/taken"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/taken_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4sp"
+                android:text="0"
+                android:textColor="@color/text_color_primary"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:orientation="horizontal"
+            android:weightSum="2.5">
+
+            <TextView
                 android:id="@+id/cancelled_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

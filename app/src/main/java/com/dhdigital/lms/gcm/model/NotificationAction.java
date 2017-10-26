@@ -7,23 +7,6 @@ import android.os.Parcelable;
  * Created by shiv on 29/3/16.
  */
 public class NotificationAction implements Parcelable {
-    private String title;
-    private String body;
-    private String module;
-    private String type;
-    private String taskId;
-    private String referenceNo;
-
-    public NotificationAction() {
-    }
-
-    public NotificationAction(Parcel in) {
-        module = in.readString();
-        type = in.readString();
-        taskId = in.readString();
-        referenceNo = in.readString();
-    }
-
     public static final Creator<NotificationAction> CREATOR = new Creator<NotificationAction>() {
         @Override
         public NotificationAction createFromParcel(Parcel in) {
@@ -35,6 +18,22 @@ public class NotificationAction implements Parcelable {
             return new NotificationAction[size];
         }
     };
+    private String title;
+    private String body;
+    private String module;
+    private String type;
+    private String leaveId;
+    private String referenceNo;
+
+    public NotificationAction() {
+    }
+
+    public NotificationAction(Parcel in) {
+        module = in.readString();
+        type = in.readString();
+        leaveId = in.readString();
+        referenceNo = in.readString();
+    }
 
     @Override
     public int describeContents() {
@@ -45,7 +44,7 @@ public class NotificationAction implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(module);
         parcel.writeString(type);
-        parcel.writeString(taskId);
+        parcel.writeString(leaveId);
         parcel.writeString(referenceNo);
     }
 
@@ -65,12 +64,12 @@ public class NotificationAction implements Parcelable {
         this.type = type;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public String getLeaveId() {
+        return leaveId;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setLeaveId(String leaveId) {
+        this.leaveId = leaveId;
     }
 
     public String getReferenceNo() {

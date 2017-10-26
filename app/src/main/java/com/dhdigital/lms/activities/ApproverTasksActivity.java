@@ -155,12 +155,16 @@ public class ApproverTasksActivity extends BaseActivity implements ListItemClick
                     if (serviceResponse instanceof MyleavesResponse) {
                         MyleavesResponse response = (MyleavesResponse) serviceResponse;
                         if (response.getContent() != null) {
-                            mLeavesList.clear();
-                            totalElements = response.getTotalElements();
-                            mTRPageIndex++;
-                            mLeavesList.addAll(response.getContent());
-                            mLeavesAdapter.notifyDataSetChanged();
-                            emptyView.setVisibility(View.GONE);
+                            if (response.getContent().size() == 0) {
+                                emptyView.setVisibility(View.VISIBLE);
+                            } else {
+                                mLeavesList.clear();
+                                totalElements = response.getTotalElements();
+                                mTRPageIndex++;
+                                mLeavesList.addAll(response.getContent());
+                                mLeavesAdapter.notifyDataSetChanged();
+                                emptyView.setVisibility(View.GONE);
+                            }
 
                         }
                     }

@@ -24,14 +24,14 @@ public class NetworkEvents {
     public static final int CANCEL_LEAVE_REQUEST = 310;
     public static final int CALCULATE_NO_DAYS = 311;
     public static final int GET_MY_TAKS = 312;
-    public static final int GET_MY_FILTERED_TASKS = 319;
-
     public static final int APPROVE_TASK = 313;
     public static final int REJECT_TAKS = 314;
     public static final int LEAVE_DASHBOARD = 315;
+    public static final int GET_MY_FILTERED_TASKS = 316;
     public static final int GET_EMPLOYEES = 317;
     public static final int CHANGE_PWD = 318;
     public static final int GET_TEAMS = 319;
+    public static final int GET_LEAVE_REQUEST = 320;
 
 
 

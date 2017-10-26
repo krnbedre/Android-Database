@@ -34,7 +34,6 @@ import com.dhdigital.lms.db.MasterDataTable;
 import com.dhdigital.lms.modal.FailResponse;
 import com.dhdigital.lms.modal.GlobalData;
 import com.dhdigital.lms.modal.Holiday;
-import com.dhdigital.lms.modal.Leave;
 import com.dhdigital.lms.modal.LeaveEntitlement;
 import com.dhdigital.lms.modal.LeaveType;
 import com.dhdigital.lms.modal.MasterData;
@@ -224,7 +223,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
         removeProgressDialog();
         switch (actionID) {
             case NetworkEvents.SUBMIT_LEAVE_REQUEST:
-                if (status && serviceResponse instanceof Leave) {
+                if (status && serviceResponse instanceof Integer) {
 
                     AppUtil.showSnackBar(findViewById(R.id.button_save), "Leave Applied Successfully", Color.parseColor("#259259"));
                     final Handler handler = new Handler();
@@ -770,7 +769,7 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
     public void submitLeaveRequest() {
 
         showProgressDialog("Submitting your leave...");
-        Type type = new TypeToken<Leave>() {
+        Type type = new TypeToken<Integer>() {
         }.getType();
 
         long userid = GlobalData.gLoggedInUser.getEmployee().getId();
@@ -793,10 +792,10 @@ public class NewLeaveRequestActivity extends BaseActivity implements View.OnClic
 
         Log.d("URL",URL);
 
-        RequestManager.addRequest(new GsonObjectRequest<Leave>(URL,HeaderManager.prepareMasterDataHeaders(this),payload,type,new VolleyErrorListener(this,this,NetworkEvents.SUBMIT_LEAVE_REQUEST)) {
+        RequestManager.addRequest(new GsonObjectRequest<Integer>(URL, HeaderManager.prepareMasterDataHeaders(this), payload, type, new VolleyErrorListener(this, this, NetworkEvents.SUBMIT_LEAVE_REQUEST)) {
 
             @Override
-            public void deliverResponse(Leave response, Map<String, String> responseHeaders) {
+            public void deliverResponse(Integer response, Map<String, String> responseHeaders) {
 
                 PreferenceUtil.saveCookies(NewLeaveRequestActivity.this, responseHeaders);
                 updateUi(true,NetworkEvents.SUBMIT_LEAVE_REQUEST,response);

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.dhdigital.lms.R;
 import com.dhdigital.lms.activities.LeaveDetailsActivity;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class ListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener {
 
     private static RecyclerView recyclerView;
+    private TextView mEmptytextView;
     private View view;
     private String title;
     private ArrayList<LeaveModal> leavesList = new ArrayList<>();
@@ -34,31 +36,39 @@ public class ListFragment extends Fragment implements RecyclerItemClickListener.
     public ListFragment() {
     }
 
-    public ListFragment(String title,ArrayList<LeaveModal> list) {
-        this.title = title;//Setting tab title
-        this.leavesList = list;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.leavesList = getArguments().getParcelableArrayList(AppConstants.LEAVES_FRAGMENT);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.list_fragment_layout, container, false);
-
+        this.leavesList = getArguments().getParcelableArrayList(AppConstants.LEAVES_FRAGMENT);
         setRecyclerView();
         return view;
 
     }
+
     //Setting recycler view
     private void setRecyclerView() {
 
         recyclerView = (RecyclerView) view
                 .findViewById(R.id.recyclerView);
+        mEmptytextView = (TextView) view.findViewById(R.id.empty);
         recyclerView.setHasFixedSize(true);
         recyclerView
                 .setLayoutManager(new LinearLayoutManager(getActivity()));//Linear Items
 
         MyLeavesRecyclerAdapter adapter = new MyLeavesRecyclerAdapter(getActivity(), leavesList);
+        if (leavesList.size() > 0) {
+            mEmptytextView.setVisibility(View.GONE);
+        } else {
+            mEmptytextView.setVisibility(View.VISIBLE);
+        }
         recyclerView.setAdapter(adapter);// set adapter on recyclerview
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),this));
 

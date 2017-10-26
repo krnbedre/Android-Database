@@ -5,7 +5,6 @@ package com.dhdigital.lms.net;
  */
 public class APIUrls {
 
-    public static final String MY_INBOX_SEARCH = "&search=%7B%22candidateGroup%22:null";
     private static final String DEV_BASE_URL = "http://219.65.70.150/lms/";
     private static final String LOCAL_HOST_URL = "http://192.168.10.37:8080/lms/";
     private static final String PROD_BASE_URL = "http://192.168.50.9:8080/lms/";
@@ -29,6 +28,8 @@ public class APIUrls {
     public static final String GET_HOLIDAY_LIST = BASE_URL + "holidaysList";
     public static final String CHANGE_PASSWORD = BASE_URL + "changepassword";
     public static final String GET_TEAMS = BASE_URL + "employee/getTeams";
+    public static final String GET_LEAVE_DETAILS = BASE_URL + "getLeave";
+
 
 
 }

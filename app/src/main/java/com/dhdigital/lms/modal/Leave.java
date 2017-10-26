@@ -4,9 +4,16 @@ package com.dhdigital.lms.modal;
  * Created by admin on 03/10/17.
  */
 
-public class Leave  {
+public class Leave {
 
     long id;
+    Employee requestedBy;
+    Employee approver;
+    LeaveType leaveType;
+    MasterData leaveReason;
+    MasterData status;
+    long fromDate = 0;
+    long toDate = 0;
 
     public long getId() {
         return id;
@@ -56,13 +63,6 @@ public class Leave  {
         this.status = status;
     }
 
-    Employee requestedBy;
-    Employee approver;
-    LeaveType leaveType;
-    MasterData leaveReason;
-    MasterData status;
-
-
     public long getFromDate() {
         return fromDate;
     }
@@ -78,7 +78,4 @@ public class Leave  {
     public void setToDate(long toDate) {
         this.toDate = toDate;
     }
-
-    long fromDate = 0;
-    long toDate = 0;
 }

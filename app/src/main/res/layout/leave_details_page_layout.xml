@@ -277,6 +277,40 @@
                     />
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/requestor_comments_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:background="@drawable/card_style"
+                android:focusableInTouchMode="false"
+                android:orientation="vertical"
+                android:padding="4sp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6sp"
+                    android:gravity="center_vertical"
+                    android:padding="4sp"
+                    android:text="Requestor Comments"
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/requestor_comments_txt"
+                    style="@style/edittext_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8sp"
+                    android:gravity="center_vertical"
+                    android:lines="5"
+                    android:maxLines="5" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/approver_details_container"
                 android:layout_width="match_parent"
@@ -315,8 +349,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6sp"
                 android:background="@drawable/card_style"
+                android:focusableInTouchMode="false"
                 android:orientation="vertical"
-
                 android:padding="4sp">
                 <TextView
                     android:layout_width="match_parent"
@@ -336,7 +370,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8sp"
                     android:gravity="center_vertical"
-                    android:hint="Comments"
                     android:lines="5"
                     android:maxLines="5" />
 
@@ -346,7 +379,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6sp"
-                android:background="@color/common_grey_4"
+                android:background="@color/white"
                 android:orientation="vertical"
 
                 android:padding="4sp">
@@ -354,11 +387,13 @@
 
                 <Button
                     android:id="@+id/view_leave_bal_btn"
+                    style="@style/material_design_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@color/common_grey_4"
+                    android:background="@drawable/button_gray_shape"
                     android:text="VIEW LEAVE BALANCE"
+                    android:textColor="@color/text_color_primary"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     />

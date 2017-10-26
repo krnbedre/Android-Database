@@ -14,6 +14,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.dhdigital.lms.R;
+import com.dhdigital.lms.util.AppConstants;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -162,7 +163,51 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         TextView listTitleTextView = (TextView) convertView
                 .findViewById(R.id.listTitle);
         //updateCountStatus();
-        switch (listPosition) {
+
+        switch (listTitle) {
+
+            case AppConstants.APPLY_LEAVE:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.apply_leave_icon), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.apply_leave_icon), null, null, null);
+                }
+                break;
+            case AppConstants.MY_LEAVES:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.my_tasks_icon), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.my_tasks_icon), null, null, null);
+                }
+                break;
+            case AppConstants.APPROVE_LEAVE:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.option_indicator), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.option_indicator), null, null, null);
+                }
+                break;
+            case AppConstants.CALENDAR:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.calender_menu_icon), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.calender_menu_icon), null, null, null);
+                }
+                break;
+            case AppConstants.LOG_OUT:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.logout_icon), null, null, null);
+                } else {
+                    listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
+                }
+                break;
+        }
+
+
+
+
+
+        /*switch (listPosition) {
             case NEW_LEAVE_REQUEST:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.apply_leave_icon), null, null, null);
@@ -187,6 +232,17 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 } else {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.option_indicator), null, null, null);
                 }
+
+                List<UserRole> userRoles = GlobalData.gLoggedInUser.getUserRoles();
+                for (int i = 0; i < userRoles.size(); i++) {
+                    if (userRoles.get(i).getAuthority().equalsIgnoreCase("APPROVER")) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.calender_menu_icon), null, null, null);
+                        } else {
+                            listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.calender_menu_icon), null, null, null);
+                        }
+                    }
+                }
                 //listTitleImageView.setBackground(context.getDrawable(R.drawable.title_icon_my_inbox));
                 break;
             case CALENDAR:
@@ -196,6 +252,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                 } else {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.calender_menu_icon), null, null, null);
                 }
+
                 break;
             case LOG_OUT:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -204,7 +261,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
                     listTitleTextView.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.logout_icon), null, null, null);
                 }
                 break;
-        }
+        } */
         //listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
         return convertView;
